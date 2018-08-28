@@ -22,10 +22,10 @@ async def eval(ctx, *, code):
         result = eval(code)
         if inspect.isawaitable(result):
             result = await result
-    except Exception as e:
-            await ctx.send('```py\nInput: {}\n{}: {}```'.format(code, type(e).__name__, e))
         else:
             await ctx.send('```py\nInput: {}\nOutput: {}\n```'.format(code, result))
+    except Exception as e:
+            await ctx.send('```py\nInput: {}\n{}: {}```'.format(code, type(e).__name__, e))
 
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
