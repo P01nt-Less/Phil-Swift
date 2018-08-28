@@ -18,16 +18,16 @@ async def on_ready(ctx):
 
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
-    '''Get the list of commands.\nUsage: !help [command]\nAliases: !commands, !cmds,!h\nPermissions: None'''
+    '''Get a list of commands.\n`commands` `cmds` `h`'''
     if cmd == None:
         i = discord.Embed(title='Help', color=0xFFFF00)
         i.add_field(name='General', value='`help`')
         i.add_field(name='Informational', value='Nothing')
-        i.add_field(name='Fun', value='')
-        i.add_field(name='Utility', value='')
-        i.add_field(name='Managing', value='')
-        i.add_field(name='Moderation', value='')
-        i.add_field(name='Owner', value='')
+        i.add_field(name='Fun', value='Nothing')
+        i.add_field(name='Utility', value='Nothing')
+        i.add_field(name='Managing', value='Nothing')
+        i.add_field(name='Moderation', value='Nothing')
+        i.add_field(name='Owner', value='Nothing')
         i.set_footer(text='Do !help <command> to find out what it does.')
         await ctx.send(embed=cmd)
     if cmd:
@@ -37,5 +37,6 @@ async def help(ctx,cmd: str=None):
         return await ctx.send(embed=s)
     else:
         return
+
 
 bot.run(os.environ.get('TOKEN'))
