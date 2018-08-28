@@ -1,4 +1,4 @@
-import git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice]
+import discord
 from discord.ext import commands
 import os
 import asyncio
