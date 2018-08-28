@@ -1,8 +1,23 @@
 import discord
 from discord.ext import commands
-import os
 import asyncio
 import inspect
+import sys
+import urllib.request
+import zipfile
+import os
+
+REPOSITORY_ZIP_URL = 'https://github.com/Rapptz/discord.py/archive/rewrite.zip#egg=discord.py[voice]'
+filename, headers = urllib.request.urlretrieve(REPOSITORY_ZIP_URL)
+zip = zipfile.ZipFile(filename)
+directory = filename + '_dir'
+zip.extractall(directory)
+module_directory_from_zip = os.listdir(directory)[0]
+module_directory = 'github-discord-rewrite'
+os.rename(os.path.join(directory, module_directory_from_zip),
+          os.path.join(directory, module_directory))
+sys.path.append(directory)
+import github-discord-rewrite
 
 bot = commands.Bot(command_prefix='p.',case_insensitive=True,description='A discord bot.',self_bot=False,owner_id=276043503514025984)
 bot.remove_command('help')
