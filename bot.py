@@ -11,9 +11,8 @@ bot.remove_command('help')
 def owner(ctx):
     return ctx.message.author.id == '276043503514025984'  # checks if @Pointless#1278 is the author of the command
 
-
 @bot.event
-async def on_ready(ctx):
+async def on_ready():
     print('Success!')
     await bot.change_presence(game=discord.Game(name=f'over {len(bot.servers)} servers | ,help',type=3))
 
