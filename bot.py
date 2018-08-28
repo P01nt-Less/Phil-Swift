@@ -2,19 +2,30 @@ import discord
 from discord.ext import commands
 import os
 import asyncio
+import inspect
 
 bot = commands.Bot(command_prefix='p.',case_insensitive=True,description='A discord bot.',self_bot=False,owner_id=276043503514025984)
 bot.remove_command('help')
-
-def owner(ctx):
-    return ctx.message.author.id == '276043503514025984'  # checks if @Pointless#1278 is the author of the command
-
 
 @bot.event
 async def on_ready(ctx):
     print('Success!')
     await bot.change_presence(game=discord.Game(name=f'over {len(bot.servers)} servers | ,help',type=3))
 
+
+@commands.is_owner()
+@bot.command(pass_context=True,aliases=['evaluate'])
+async def eval(ctx, *, code):
+    '''Evaluate some code.\n`evaluate`'''
+    code = code.strip('`')
+    try:
+        result = eval(code)
+        if inspect.isawaitable(result):
+            result = await result
+        except Exception as e:
+            await ctx.send("```py\nInput: {}\n{}: {}```".format(code, type(e).__name__, e))
+        else:
+            await ctx.send("```py\nInput: {}\nOutput: {}\n```".format(code, result))
 
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
