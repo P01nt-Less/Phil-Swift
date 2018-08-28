@@ -43,7 +43,7 @@ async def help(ctx,cmd: str=None):
         i.add_field(name='Moderation', value='Nothing')
         i.add_field(name='Owner', value='Nothing')
         i.set_footer(text='Do !help <command> to find out what it does.')
-        await bot.say(embed=cmd)
+        await bot.say(embed=i)
     if cmd:
         get = bot.get_command(cmd)
         s = discord.Embed(title='Help', color=0xFFFF00)
