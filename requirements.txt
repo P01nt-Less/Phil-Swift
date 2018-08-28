@@ -1,4 +1,3 @@
 discord
-io
 contextlib
 aiohttp
