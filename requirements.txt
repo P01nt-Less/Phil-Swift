@@ -1,1 +1,4 @@
 discord
+io
+contextlib
+aiohttp
