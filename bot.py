@@ -4,6 +4,7 @@ import asyncio
 import inspect
 import sys
 import os
+import yarl
 import io
 import datetime
 import textwrap
@@ -359,7 +360,7 @@ async def userinfo(ctx, user:discord.Member = None):
     suserinfo.add_field(name ='Game Playing',value=str(user.game))
     suserinfo.add_field(name ='Status',value=str(user.status))
     suserinfo.add_field(name ='Highest Role',value=str(user.top_role))
-    suserinfo.set_footer(text =f'Created at: {str(user.joined_at)}')
+    suserinfo.set_footer(text =f'Created at: {str(user.created_at.strftime("%A, %B %d %Y @ %H:%M:%S %p"))}')
     await ctx.send(embed=suserinfo)
 '''
 '##::::'##::::'###::::'##::: ##::::'###:::::'######:::'####:'##::: ##::'######:::
