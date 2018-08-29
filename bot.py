@@ -5,6 +5,7 @@ import inspect
 import sys
 import os
 import io
+import datetime
 import textwrap
 import aiohttp
 from contextlib import redirect_stdout
@@ -18,7 +19,7 @@ def owner(ctx):
 @bot.event
 async def on_ready():
     print('Success!')
-    await bot.change_presence(game=discord.Game(name=f'over {len(bot.servers)} servers | p.help',type=3))
+    await bot.change_presence(game=discord.Game(name=f'over {len(bot.guilds)} servers | p.help',type=3))
 
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
@@ -32,12 +33,12 @@ async def help(ctx,cmd: str=None):
         e.add_field(name='Managing', value='`giverole` `takerole`')
         e.add_field(name='Moderation', value='`kick` `ban` `unban` `softban` `channelmute` `channelunmute` `warn` `purge`')
         e.add_field(name='Owner', value='`say` `restart`')
-        await bot.say(embed=e)
+        await ctx.send(embed=e)
     if cmd:
         get = bot.get_command(cmd)
         s = discord.Embed(title='Help', color=0xFFFF00)
         s.add_field(name=f'Command: p.{cmd}', value=f'Help: {get.help}')
-        return await bot.say(embed=s)
+        return await ctx.send(embed=s)
     else:
         return
 
@@ -45,8 +46,8 @@ async def help(ctx,cmd: str=None):
 @commands.check(owner)
 async def say(ctx, *, text: str=None):
     '''Make the bot say something'''
-    await bot.delete_message(ctx.message)
-    await bot.say(text)
+    await ctx.message.delete()
+    await ctx.send(text)
 
 
 @bot.command(pass_context=True, aliases=['shutdown'])
@@ -55,7 +56,7 @@ async def restart(ctx):
     '''Stop and run the bot again.\n`shutdown`'''
     embed = discord.Embed(title='Restart', description=f'Sorry, but {ctx.message.author.mention} has forced me to restart. It\'ll only take a moment!', color=0xFF0000)
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=embed)
+    await ctx.send(embed=embed)
     await bot.logout()
 
 
@@ -77,7 +78,7 @@ async def ping(ctx):
     embed = discord.Embed(Title='Ping', color=0x00FF00)
     embed.add_field(name='Pong!', value='Calculating...')
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    ping3 = await bot.say(embed=embed)
+    ping3 = await ctx.send(embed=embed)
     ping2 = time.time() - ptime
     ping1 = discord.Embed(Title='Ping', color=0x00FF00)
     ping1.add_field(name='Pong!', value='{} milliseconds.'.format(int((round(ping2 * 1000)))))
@@ -89,12 +90,12 @@ async def info(ctx):
     '''Find information about the bot'''
     sinfo = discord.Embed(title='Information', color=0x00FF00)
     sinfo.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    sinfo.add_field(name='Servers', value='{} servers.'.format(str(len(bot.servers))))
+    sinfo.add_field(name='Servers', value='{} servers.'.format(str(len(bot.guilds))))
     sinfo.add_field(name='Discord.py version', value='Version {}'.format(discord.__version__))
     sinfo.add_field(name='Links', value='[Support Server](https://discord.gg/JpnSpyg \"Support Server\")\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=484052296955592704&scope=bot&permissions=8 \"Invite Link\")')
     sinfo.add_field(name='Credits', value='Pointless#1278 - Creator\nVilgot')
     sinfo.set_thumbnail(url = bot.user.avatar_url)
-    await bot.say(embed=sinfo)
+    await ctx.send(embed=sinfo)
 
 @bot.command(pass_context=True,aliases=['idea','suggestion','ideas'])
 async def suggest(ctx, *, idea):
@@ -102,7 +103,7 @@ async def suggest(ctx, *, idea):
     if idea == None:
         nsuggest = discord.Embed(title='Error',description='Specify a suggestion!',color=0xFF0000)
         nsuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=nsuggest)
+        await ctx.send(embed=nsuggest)
     if idea:
         osuggest = discord.Embed(title='Suggest',description=idea,color=0x00FF00)
         osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -121,7 +122,7 @@ async def bug(ctx, *, issue):
     if issue == None:
         nsuggest = discord.Embed(title='Error',description='Specify a bug/issue!',color=0xFF0000)
         nsuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=nsuggest)
+        await ctx.send(embed=nsuggest)
     if issue:
         osuggest = discord.Embed(title='Bug',description=issue,color=0x00FF00)
         osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -152,7 +153,7 @@ async def cryptocurrency(ctx, coin:str=None):
         if coin == None:
             ncryptocurrency = discord.Embed(title='Error', description='Specify the cryptocurrency symbol, not cryptocurreny name!', color=0xFF0000)
             ncryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=ncryptocurrency)
+            return await ctx.send(embed=ncryptocurrency)
         if coin:
             scryptocurrency = discord.Embed(title='Cryptocurrency', description='Information about the cryptocurrency, {}.'.format(str(coin)), color=0x00FF00)
             scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -162,13 +163,13 @@ async def cryptocurrency(ctx, coin:str=None):
             scryptocurrency.add_field(name='Last Updated', value=json['DISPLAY'][str(coin)]['USD']['LASTUPDATE'])
             scryptocurrency.add_field(name='Supply', value=json['DISPLAY'][str(coin)]['USD']['SUPPLY'])
             scryptocurrency.set_footer(text='Cryptocurrency rates by https://cryptocompare.com/!')
-            return await bot.say(embed=scryptocurrency)
+            return await ctx.send(embed=scryptocurrency)
         else:
             return
     else:
         rcryptocurrency = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
         rcryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rcryptocurrency)
+        return await ctx.send(embed=rcryptocurrency)
 
 @bot.command(pass_context=True, aliases=['math','c'])
 async def calculate(ctx,*, expression):
@@ -179,23 +180,23 @@ async def calculate(ctx,*, expression):
         if expression == None:
             ncalculate = discord.Embed(title='Error', description='Specify the expression!', color=0xFF0000)
             ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=ncalculate)
+            return await ctx.send(embed=ncalculate)
         if expression:
             scalculate = discord.Embed(title='Expression', description='{}'.format(expression), color=0x00FF00)
             scalculate.add_field(name='Answer', value='Your answer is: ' + text)
             scalculate.set_footer(text='Type !calchelp for help')
             scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=scalculate)
+            return await ctx.send(embed=scalculate)
         else:
             return
     if r.status_code == 400:
         icalculate = discord.Embed(title='Error', description='That is an invalid expression!', color=0xFF0000)
         icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=icalculate)
+        return await ctx.send(embed=icalculate)
     else:
         rcalculate = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
         rcalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rcalculate)
+        return await ctx.send(embed=rcalculate)
 
 @bot.command(pass_context=True,aliases=['ch'])
 async def calchelp(ctx):
@@ -205,10 +206,10 @@ async def calchelp(ctx):
     calchelp3 = discord.Embed(title='Tests', description='`isInteger(x)` Test whether a value is an integer number.\n`isNaN(x)` Test whether a value is NaN (not a number).\n`isNegative(x)` Test whether a value is negative: smaller than zero\n`isNumeric(x)` Test whether a value is an numeric value.\n`isPositive(x)` Test whether a value is positive: larger than zero.\n`isPrime(x)` Test whether a value is prime: has no divisors other than itself and one.\n`isZero(x)` Test whether a value is zero.',color=0xFFFF00)
     calchelp4 = discord.Embed(title='Constants', description='`e`,`E` Euler’s number, the base of the natural logarithm. `2.718281828459045`\n`i` Imaginary unit, defined as ii=-1. A complex number is described as a + bi, where a is the real part, and b is the imaginary part. `sqrt(-1)`\n`Infinity` Infinity, a number which is larger than the maximum number that can be handled by a floating point number. `Infinity`\n `LN2` Returns the natural logarithm of 2. `0.6931471805599453`\n`LN10` Returns the natural logarithm of 10.	`2.302585092994046`\n`LOG2E` Returns the base-2 logarithm of E.	`1.4426950408889634`\n`LOG10E` Returns the base-10 logarithm of E. `0.4342944819032518`\n`NaN` Not a number. `NaN`\n`null` Value null. `null`\n`phi` Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as (1 + sqrt(5)) / 2. `1.618033988749895`\n`pi`,`PI` The number pi is a mathematical constant that is the ratio of a circle\'s circumference to its diameter. `3.141592653589793`\n`SQRT1_2` Returns the square root of 1/2. `0.7071067811865476`\n`SQRT2` Returns the square root of 2. `1.4142135623730951`\n`tau` Tau is the ratio constant of a circle\'s circumference to radius, equal to 2 * pi. `6.283185307179586`\n`undefined` An undefined value. Preferably, use null to indicate undefined values. `undefined`\n `version` Returns the version number of math.js. For example `0.24.1`',color=0xFFFF00)
     calchelp4.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=calchelp1)
-    await bot.say(embed=calchelp2)
-    await bot.say(embed=calchelp3)
-    await bot.say(embed=calchelp4)
+    await ctx.send(embed=calchelp1)
+    await ctx.send(embed=calchelp2)
+    await ctx.send(embed=calchelp3)
+    await ctx.send(embed=calchelp4)
 
 '''
 '########:'##::::'##:'##::: ##:
@@ -227,7 +228,7 @@ async def coinflip(ctx):
     '''Flip a coin and either get heads or tails.\nUsage: !coinflip \nAliases: !cf\nPermissions: None'''
     scoinflip = discord.Embed(title='Coinflip', description=random.choice(['Heads', 'Tails']), color=0xFF0000)
     scoinflip.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed=scoinflip)
+    return await ctx.send(embed=scoinflip)
 
 
 @bot.command(pass_context=True, name='8ball', aliases=['8b', 'eb'])
@@ -236,15 +237,15 @@ async def eightball(ctx, question:str=None):
     if question == None:
         neightball = discord.Embed(title='Error', description='Specify the question!', color=0xFF0000)
         neightball.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=neightball)
+        return await ctx.send(embed=neightball)
     if '?' not in question:
         qeightball = discord.Embed(title='Error', description='That is invalid and not a question!', color=0xFF0000)
         qeightball.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=qeightball)
+        return await ctx.send(embed=qeightball)
     else:
         seightball = discord.Embed(title='8ball', description=random.choice(['Signs point to yes.', 'Yes.', 'Without a doubt.', 'As I see it, yes.', 'You may rely on it.', 'It is decidedly so.', 'Yes - definitely.', 'It is certain.', 'Most likely.', 'Outlook good.', 'Reply hazy, try again.', 'Concentrate and ask again.', 'Better not tell you now.', 'Cannot predict now.', 'Ask again later.', 'My sources say no.', 'Outlook not so good.', 'Very doubtful.', 'My reply is no.', 'Don\'t count on it.']), color=0x00FF00)
         seightball.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=seightball)
+        return await ctx.send(embed=seightball)
 
 
 @bot.command(pass_context=True, aliases=['xkcd','co'])
@@ -257,11 +258,11 @@ async def comic(ctx):
         scomic.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         scomic.set_image(url=json['img'])
         scomic.set_footer(text='Comics by https://xkcd.com/!')
-        return await bot.say(embed=scomic)
+        return await ctx.send(embed=scomic)
     else:
         rcomic = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
         rcomic.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rcomic)
+        return await ctx.send(embed=rcomic)
 
 
 @bot.command(pass_context=True)
@@ -274,11 +275,11 @@ async def dog(ctx):
         sdog.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         sdog.set_image(url=json['data'][0]['url'])
         sdog.set_footer(text='Dogs by http://thedogapi.co.uk/!')
-        return await bot.say(embed=sdog)
+        return await ctx.send(embed=sdog)
     else:
         rdog = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
         rdog.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rdog)
+        return await ctx.send(embed=rdog)
 
 @bot.command(pass_context=True)
 async def cat(ctx):
@@ -290,11 +291,11 @@ async def cat(ctx):
         scat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         scat.set_image(url=json['url'])
         scat.set_footer(text='Cats by https://catapi.glitch.me/random!')
-        return await bot.say(embed=scat)
+        return await ctx.send(embed=scat)
     else:
         rcat = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
         rcat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rcat)
+        return await ctx.send(embed=rcat)
 
 
 '''
@@ -314,7 +315,7 @@ async def part(ctx, *choice):
     '''Take a letter out of any word!\nUsage: !part <word>\nAliases: None\nPermissions: None'''
     spart = discord.Embed(title='Part', description=str(random.choice(*choice)), color=0x00FF00)
     spart.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed=spart)
+    return await ctx.send(embed=spart)
 
 @bot.command(pass_context=True)
 async def roll(ctx, maxnumber:int=6):
@@ -322,28 +323,28 @@ async def roll(ctx, maxnumber:int=6):
     if maxnumber == None:
         nroll = discord.Embed(title='Error', description=f'Specify a maximum number!', color=0xFF0000)
         nroll.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=nroll)
+        return await ctx.send(embed=nroll)
     sroll = discord.Embed(title='Roll', description=f'You rolled a {random.randint(1,maxnumber)}!', color=0x00FF00)
     sroll.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await bot.say(embed=sroll)
+    return await ctx.send(embed=sroll)
 
 @bot.command(pass_context=True,aliases=['si'])
 async def serverinfo(ctx):
     '''See information about the server!\nUsage: !serverinfo\nAliases: !si\nPermissions: None'''
-    sserverinfo = discord.Embed(title = (str(ctx.message.server.name)),colour=0x00FF00)
-    sserverinfo.set_thumbnail(url = ctx.message.server.icon_url)
-    sserverinfo.add_field(name='Owner', value=str(ctx.message.server.owner))
-    sserverinfo.add_field(name ='ID', value=str(ctx.message.server.id))
-    sserverinfo.add_field(name ='Member Count', value=str(ctx.message.server.member_count))
-    sserverinfo.add_field(name ='Region', value=str(ctx.message.server.region))
-    sserverinfo.add_field(name ='AFK Timeout', value=str(ctx.message.server.afk_timeout))
-    sserverinfo.add_field(name ='AFK Channel', value=str(ctx.message.server.afk_channel))
-    sserverinfo.add_field(name ='Verification Level',value=str(ctx.message.server.verification_level))
-    sserverinfo.add_field(name ='Custom Emotes',value=len(ctx.message.server.emojis))
-    sserverinfo.add_field(name ='Channels',value=len(ctx.message.server.channels))
-    sserverinfo.add_field(name ='Features',value=str(ctx.message.server.features))
-    sserverinfo.set_footer(text =f'Created at: {str(ctx.message.server.created_at)}')
-    await bot.say(embed=sserverinfo)
+    sserverinfo = discord.Embed(title = (str(ctx.message.guild.name)),colour=0x00FF00)
+    sserverinfo.set_thumbnail(url = ctx.message.guild.icon_url)
+    sserverinfo.add_field(name='Owner', value=str(ctx.message.guild.owner))
+    sserverinfo.add_field(name ='ID', value=str(ctx.message.guild.id))
+    sserverinfo.add_field(name ='Member Count', value=str(ctx.message.guild.member_count))
+    sserverinfo.add_field(name ='Region', value=str(ctx.message.guild.region))
+    sserverinfo.add_field(name ='AFK Timeout', value=str(ctx.message.guild.afk_timeout))
+    sserverinfo.add_field(name ='AFK Channel', value=str(ctx.message.guild.afk_channel))
+    sserverinfo.add_field(name ='Verification Level',value=str(ctx.message.guild.verification_level))
+    sserverinfo.add_field(name ='Custom Emotes',value=len(ctx.message.guild.emojis))
+    sserverinfo.add_field(name ='Channels',value=len(ctx.message.guild.channels))
+    sserverinfo.add_field(name ='Features',value=str(ctx.message.guild.features))
+    sserverinfo.set_footer(text =f'Created at: {str(ctx.message.guild.created_at)}')
+    await ctx.send(embed=sserverinfo)
 
 @bot.command(pass_context=True,aliases=['ui'])
 async def userinfo(ctx, user:discord.Member = None):
@@ -359,7 +360,7 @@ async def userinfo(ctx, user:discord.Member = None):
     suserinfo.add_field(name ='Status',value=str(user.status))
     suserinfo.add_field(name ='Highest Role',value=str(user.top_role))
     suserinfo.set_footer(text =f'Created at: {str(user.joined_at)}')
-    await bot.say(embed=suserinfo)
+    await ctx.send(embed=suserinfo)
 '''
 '##::::'##::::'###::::'##::: ##::::'###:::::'######:::'####:'##::: ##::'######:::
  ###::'###:::'## ##::: ###:: ##:::'## ##:::'##... ##::. ##:: ###:: ##:'##... ##::
@@ -377,34 +378,34 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
     if not ctx.message.author.server_permissions.manage_roles:
         pgiverole = discord.Embed(title='Error', description='You don\'t have permission to give roles to members!', color=0xFF0000)
         pgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=pgiverole)
+        return await ctx.send(embed=pgiverole)
     if not member:
         mgiverole = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=mgiverole)
+        return await ctx.send(embed=mgiverole)
     if not role:
         rgiverole = discord.Embed(title='Error', description='You must specify a role!', color=0xFF0000)
         rgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rgiverole)
-    if role not in ctx.message.server.roles:
+        return await ctx.send(embed=rgiverole)
+    if role not in ctx.message.guild.roles:
         ngiverole = discord.Embed(title='Error', description='That isn\'t a role!', color=0xFF0000)
         ngiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=ngiverole)
+        return await ctx.send(embed=ngiverole)
     if role == None:
         nogiverole = discord.Embed(title='Error', description='That isn\'t a role!', color=0xFF0000)
         nogiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=nogiverole)
+        return await ctx.send(embed=nogiverole)
     try:
-        discord.utils.get(ctx.message.server.roles, name=role)
+        discord.utils.get(ctx.message.guild.roles, name=role)
         await bot.add_roles(member, role)
         sgiverole = discord.Embed(title='Giverole', description=f'{ctx.message.author.mention} has given the role, {role}, to {member.name}!', color=0x00FF00)
         sgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=sgiverole)
+        await ctx.send(embed=sgiverole)
     except Exception as e:
         if 'Privilege is too low' in str(e):
             egiverole = discord.Embed(title='Error', description='The person you are trying to give a role to has high permissions.', color=0xFF0000)
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=egiverole)
+            return await ctx.send(embed=egiverole)
         else:
             pass
 
@@ -415,29 +416,29 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
     if not ctx.message.author.server_permissions.manage_roles:
         ptakerole = discord.Embed(title='Error', description='You don\'t have permission to give roles to members!', color=0xFF0000)
         ptakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=ptakerole)
+        return await ctx.send(embed=ptakerole)
     if not member:
         mtakerole = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mtakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=mtakerole)
+        return await ctx.send(embed=mtakerole)
     if not role:
         rtakerole = discord.Embed(title='Error', description='You must specify a role!', color=0xFF0000)
         rtakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rtakerole)
-    if role not in ctx.message.server.roles:
+        return await ctx.send(embed=rtakerole)
+    if role not in ctx.message.guild.roles:
         ntakerole = discord.Embed(title='Error', description='That isn\'t a role!', color=0xFF0000)
         ntakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=ntakerole)
+        return await ctx.send(embed=ntakerole)
     try:
         await bot.remove_roles(member, role)
         stakerole = discord.Embed(title='Takerole', description=f'{ctx.message.author.mention} has taken the role, {role}, from {member.name}!', color=0x00FF00)
         stakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await bot.say(embed=stakerole)
+        await ctx.send(embed=stakerole)
     except Exception as e:
         if 'Privilege is too low' in str(e):
             egiverole = discord.Embed(title='Error', description=f'The person you are trying to take a role from has high permissions.', color=0xFF0000)
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=egiverole)
+            return await ctx.send(embed=egiverole)
         else:
             pass
 
@@ -459,28 +460,28 @@ async def kick(ctx, member : discord.Member=None, *, reason='The kick hammer has
     if not ctx.message.author.server_permissions.kick_members:
         pkick = discord.Embed(title='Error', description='You don\'t have permission to kick members!', color=0xFF0000)
         pkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=pkick)
+        return await ctx.send(embed=pkick)
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=mkick)
+        return await ctx.send(embed=mkick)
     if not reason:
         rkick = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rkick)
+        return await ctx.send(embed=rkick)
     try:
         await bot.kick(member)
     except Exception as e:
         if 'Privilege is too low' in str(e):
             ekick = discord.Embed(title='Error', description='The person you are trying to kick has high permissions.', color=0xFF0000)
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=ekick)
+            return await ctx.send(embed=ekick)
         else:
             pass
     skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=skick)
-    return await bot.send_message(member, f'You have been kicked from {ctx.message.server.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.send(embed=skick)
+    return await bot.send_message(member, f'You have been kicked from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 
 @bot.command(pass_context=True, aliases=['b'])
@@ -489,45 +490,45 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     if not ctx.message.author.server_permissions.ban_members:
         pban = discord.Embed(title='Error', description='You don\'t have permission to ban members!', color=0xFF0000)
         pban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=pban)
+        return await ctx.send(embed=pban)
     if not member:
         mban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=mban)
+        return await ctx.send(embed=mban)
     if not reason:
         rban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rban)
+        return await ctx.send(embed=rban)
     try:
         await bot.ban(member)
     except Exception as e:
         if 'Privilege is too low' in str(e):
             eban = discord.Embed(title='Error', description='The person you are trying to ban has high permissions.', color=0xFF0000)
             eban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=eban)
+            return await ctx.send(embed=eban)
         else:
             pass
     sban = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}, because: {reason}', color=0x00FF00)
     sban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=sban)
-    return await bot.send_message(member, f'You have been banned from {ctx.message.server.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.send(embed=sban)
+    return await bot.send_message(member, f'You have been banned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member : discord.Member=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
-    await bot.say('If you know how to make a working unban command that can unban people who are not in this server, using at least IDs, but usernames more preferable, in Python, please contact Pointless#1278 and you will be credited and your name will be placed onto the footer of the !unban command\'s embed! This will help me, you and everyone else who uses the bot.')
+    await ctx.send('If you know how to make a working unban command that can unban people who are not in this server, using at least IDs, but usernames more preferable, in Python, please contact Pointless#1278 and you will be credited and your name will be placed onto the footer of the !unban command\'s embed! This will help me, you and everyone else who uses the bot.')
     if not ctx.message.author.server_permissions.ban_members:
         punban = discord.Embed(title='Error', description='You don\'t have permission to unban members!', color=0xFF0000)
         punban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=punban)
+        return await ctx.send(embed=punban)
     if not member:
         munban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         munban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=munban)
+        return await ctx.send(embed=munban)
     if not reason:
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=runban)
+        return await ctx.send(embed=runban)
     try:
         banlist=await bot.get_bans()
     except:
@@ -535,11 +536,11 @@ async def unban(ctx, member : discord.Member=None, *, reason='The unban hammer h
     for ban in banlist:
         if ban.user.name == member:
             user = ban.user
-    await bot.unban(ctx.message.server, member)
+    await bot.unban(ctx.message.guild, member)
     sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {bember.mention}, because: {reason}', color=0x00FF00)
     sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=sunban)
-    return await bot.send_message(member, f'You have been unbanned from {ctx.message.server.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.send(embed=sunban)
+    return await bot.send_message(member, f'You have been unbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
@@ -548,15 +549,15 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
     if not ctx.message.author.server_permissions.ban_members:
         psoftban = discord.Embed(title='Error', description='You don\'t have permission to softban members!', color=0xFF0000)
         psoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=psoftban)
+        return await ctx.send(embed=psoftban)
     if not member:
         msoftban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         msoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=msoftban)
+        return await ctx.send(embed=msoftban)
     if not reason:
         rsoftban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rsoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rsoftban)
+        return await ctx.send(embed=rsoftban)
     try:
         await bot.ban(member, delete_message_days=7)
         await bot.unban(discord.Server, member)
@@ -564,13 +565,13 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
         if 'Privilege is too low' in str(e):
             esoftban = discord.Embed(title='Error', description='The person you are trying to softban has high permissions.', color=0xFF0000)
             esoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await bot.say(embed=esoftban)
+            return await ctx.send(embed=esoftban)
         else:
             pass
     ssoftban = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softbanned {member.mention}, because: {reason}', color=0x00FF00)
     ssoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=ssoftban)
-    return await bot.send_message(member, f'You have been softbanned from {ctx.message.server.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.send(embed=ssoftban)
+    return await bot.send_message(member, f'You have been softbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 
 @bot.command(pass_context=True, aliases=['cmute', 'channelm', 'cm'])
@@ -579,22 +580,22 @@ async def channelmute(ctx, member : discord.Member, *, reason : str='The channel
     if not ctx.message.author.server_permissions.manage_messages:
         pchannelmute = discord.Embed(title='Error', description='You don\'t have permission to channelmute members!', color=0xFF0000)
         pchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=pchannelmute)
+        return await ctx.send(embed=pchannelmute)
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=mchannelmute)
+        return await ctx.send(embed=mchannelmute)
     if not reason:
         rchannelmute = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rchannelmute)
+        return await ctx.send(embed=rchannelmute)
     overwrite = discord.PermissionOverwrite()
     overwrite.send_messages = False
     await bot.edit_channel_permissions(ctx.message.channel, member, overwrite)
     schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelmuted {member.mention}, because: {reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=schannelmute)
-    await bot.send_message(member, f'You have been channelmuted in {ctx.message.server.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.send(embed=schannelmute)
+    await bot.send_message(member, f'You have been channelmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
 
 
 @bot.command(pass_context=True, aliases=['cumute', 'channelum', 'cunm', 'chum'])
@@ -603,22 +604,22 @@ async def channelunmute(ctx, member : discord.Member, *, reason : str='The chann
     if not ctx.message.author.server_permissions.manage_messages:
         pchannelmute = discord.Embed(title='Error', description='You don\'t have permission to channelunmute members!', color=0xFF0000)
         pchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=pchannelmute)
+        return await ctx.send(embed=pchannelmute)
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=mchannelmute)
+        return await ctx.send(embed=mchannelmute)
     if not reason:
         rchannelmute = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rchannelmute)
+        return await ctx.send(embed=rchannelmute)
     overwrite = discord.PermissionOverwrite()
     overwrite.send_messages = True
     await bot.edit_channel_permissions(ctx.message.channel, member, overwrite)
     schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelunmuted {member.mention}, because: {reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=schannelmute)
-    await bot.send_message(member, f'You have been channelunmuted in {ctx.message.server.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.send(embed=schannelmute)
+    await bot.send_message(member, f'You have been channelunmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True)
 async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer has spoken!'):
@@ -626,19 +627,19 @@ async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer ha
     if not ctx.message.author.server_permissions.kick_members:
         pwarn = discord.Embed(title='Error', description='You don\'t have permission to warn members!', color=0xFF0000)
         pwarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=pwarn)
+        return await ctx.send(embed=pwarn)
     if not member:
         mwarn = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mwarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=mwarn)
+        return await ctx.send(embed=mwarn)
     if not reason:
         rwarn = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rwarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=rwarn)
+        return await ctx.send(embed=rwarn)
     swarn = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned {member.mention}, because: {reason}', color=0x00FF00)
     swarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=swarn)
-    await bot.send_message(member, f'You have been warned in {ctx.message.server.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.send(embed=swarn)
+    await bot.send_message(member, f'You have been warned in {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True)
 async def purge(ctx, amount:int=None):
@@ -646,14 +647,14 @@ async def purge(ctx, amount:int=None):
     if not ctx.message.author.server_permissions.manage_messages:
         ppurge = discord.Embed(title='Error', description='You don\'t have permission to purge messages!', color=0xFF0000)
         ppurge.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=ppurge)
+        return await ctx.send(embed=ppurge)
     if amount == None:
         apurge = discord.Embed(title='Error', description='You must specify an amount!', color=0xFF0000)
         apurge.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await bot.say(embed=apurge)
+        return await ctx.send(embed=apurge)
     await bot.purge_from(channel=ctx.message.channel, limit=amount+1)
     spurge = discord.Embed(title='Purge', description=f'{ctx.message.author.mention} has purged {amount} messages!', color=0x00FF00)
     spurge.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.say(embed=spurge,delete_after=3.0)
+    await ctx.send(embed=spurge,delete_after=3.0)
 
 bot.run(os.environ.get('TOKEN'))
