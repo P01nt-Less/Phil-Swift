@@ -515,7 +515,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     return await bot.send_message(member, f'You have been banned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, member:int=None, *, reason='The unban hammer has spoken!'):
+async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
     await ctx.send('If you know how to make a working unban command that can unban people who are not in this server, using at least IDs, but usernames more preferable, in Python, please contact Pointless#1278 and you will be credited and your name will be placed onto the footer of the !unban command\'s embed! This will help me, you and everyone else who uses the bot.')
     if not ctx.message.author.server_permissions.ban_members:
