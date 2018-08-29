@@ -1,4 +1,4 @@
-import discord
+import discord-rewrite
 from discord.ext import commands
 import asyncio
 import inspect
