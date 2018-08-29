@@ -512,23 +512,6 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     await bot.say(embed=sban)
     return await bot.send_message(member, f'You have been banned from {ctx.message.server.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
-@checks.server_mod_or_perms(ban_members=True)
-@commands.guild_only()
-@commands.command()
-async def unban(self, ctx, *, username:str):
-    """Unbans the user with the specifed name from the server"""
-    try:
-        banlist = await bot.get_bans()
-    except:
-        return
-    user = None
-    for ban in banlist:
-        if ban.user.name == username:
-            user = ban.user
-    if user is None:
-    await ctx.guild.unban(user)
-
-
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member : discord.Member=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
