@@ -513,7 +513,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     sban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sban)
     return await bot.send_message(member, f'You have been banned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
-
+"""
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
@@ -531,11 +531,11 @@ async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
     bot.unban(server, bot.get_user_info(member)
-    sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
-    sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    success = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
+    success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
     return await bot.send_message(member, f'You have been unbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
-
+"""
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 async def softban(ctx, member : discord.Member=None, *, reason='The softban hammer has spoken!'):
