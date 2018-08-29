@@ -94,7 +94,7 @@ async def info(ctx):
     sinfo.add_field(name='Servers', value='{} servers.'.format(str(len(bot.guilds))))
     sinfo.add_field(name='Discord.py version', value='Version {}'.format(discord.__version__))
     sinfo.add_field(name='Links', value='[Support Server](https://discord.gg/JpnSpyg \"Support Server\")\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=484052296955592704&scope=bot&permissions=8 \"Invite Link\")')
-    sinfo.add_field(name='Credits', value='Pointless#1278 - Creator\nVilgot')
+    sinfo.add_field(name='Credits', value='Rapptz - Creating Discord.py\nPointless#1278 - Creator of Phil Swift\nVilgot#7447 - Helped me out a ton')
     sinfo.set_thumbnail(url = bot.user.avatar_url)
     await ctx.send(embed=sinfo)
 
@@ -515,7 +515,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     return await bot.send_message(member, f'You have been banned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, member : discord.Member=None, *, reason='The unban hammer has spoken!'):
+async def unban(ctx, member:int=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
     await ctx.send('If you know how to make a working unban command that can unban people who are not in this server, using at least IDs, but usernames more preferable, in Python, please contact Pointless#1278 and you will be credited and your name will be placed onto the footer of the !unban command\'s embed! This will help me, you and everyone else who uses the bot.')
     if not ctx.message.author.server_permissions.ban_members:
@@ -530,14 +530,7 @@ async def unban(ctx, member : discord.Member=None, *, reason='The unban hammer h
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
-    try:
-        banlist=await bot.get_bans()
-    except:
-        return
-    for ban in banlist:
-        if ban.user.name == member:
-            user = ban.user
-    await bot.unban(ctx.message.guild, member)
+    bot.unban(server, bot.get_user_info(member)
     sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {bember.mention}, because: {reason}', color=0x00FF00)
     sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
