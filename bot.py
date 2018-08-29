@@ -20,7 +20,7 @@ def owner(ctx):
 @bot.event
 async def on_ready():
     print('Success!')
-    await bot.change_presence(game=discord.Game(name=f'over {len(bot.guilds)} servers | p.help',type=3))
+    await bot.change_presence(activity=discord.Game(name=f'over {len(bot.guilds)} servers | p.help',type=3))
 
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
