@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import inspect
 import sys
+import requests
 import os
 import yarl
 import io
