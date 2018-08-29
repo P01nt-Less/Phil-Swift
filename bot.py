@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord import *
 import asyncio
 import inspect
 import sys
