@@ -531,7 +531,7 @@ async def unban(ctx, member:int=None, *, reason='The unban hammer has spoken!'):
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
     bot.unban(server, bot.get_user_info(member)
-    sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {bember.mention}, because: {reason}', color=0x00FF00)
+    sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned <@{int}>, because: {reason}', color=0x00FF00)
     sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
     return await bot.send_message(member, f'You have been unbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
