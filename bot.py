@@ -115,8 +115,8 @@ async def suggest(ctx, *, idea):
         channel2 = bot.get_channel('431958618791739392')
         await channel1.send(embed=ssuggest)
         reactionmessage = await channel2.send(embed=osuggest)
-        await ctx.message.add_reaction(reactionmessage, '✅')
-        await ctx.message.add_reaction(reactionmessage, '❌')
+        await reactionmessage.add_reaction('✅')
+        await reactionmessage.add_reaction('❌')
     else:
         pass
 
