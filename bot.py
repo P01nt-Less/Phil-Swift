@@ -111,10 +111,10 @@ async def suggest(ctx, *, idea):
         osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         ssuggest = discord.Embed(title='Suggest',description='Sent that suggestion over! Thank you!',color=0x00FF00)
         ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await channel.send(destination=ctx.message.channel,embed=ssuggest)
-        reactionmessage = await channel.send(discord.Object(id='431958602148872222'),embed=osuggest)
-        await message.add_reaction(reactionmessage, '✅')
-        await message.add_reaction(reactionmessage, '❌')
+        await ctx.channel.send(destination=ctx.message.channel,embed=ssuggest)
+        reactionmessage = await ctx.channel.send(discord.Object(id='431958602148872222'),embed=osuggest)
+        await ctx.message.add_reaction(reactionmessage, '✅')
+        await ctx.message.add_reaction(reactionmessage, '❌')
     else:
         pass
 
@@ -130,8 +130,8 @@ async def bug(ctx, *, issue):
         osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         ssuggest = discord.Embed(title='Bug',description='Sent that issue over! Thank you!',color=0x00FF00)
         ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await channel.send(destination=ctx.message.channel,embed=ssuggest)
-        await channel.send(discord.Object(id='431958618791739392'),embed=osuggest)
+        await ctx.channel.send(destination=ctx.message.channel,embed=ssuggest)
+        await ctx.channel.send(discord.Object(id='431958618791739392'),embed=osuggest)
     else:
         pass
 
@@ -483,7 +483,7 @@ async def kick(ctx, member : discord.Member=None, *, reason='The kick hammer has
     skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
-    return await channel.send(member, f'You have been kicked from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    return await ctx.channel.send(member, f'You have been kicked from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 
 @bot.command(pass_context=True, aliases=['b'])
@@ -513,7 +513,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     sban = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}, because: {reason}', color=0x00FF00)
     sban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sban)
-    return await channel.send(member, f'You have been banned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    return await ctx.channel.send(member, f'You have been banned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 """
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
@@ -535,7 +535,7 @@ async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
     success = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
     success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
-    return await channel.send(member, f'You have been unbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    return await ctx.channel.send(member, f'You have been unbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 """
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
@@ -566,7 +566,7 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
     ssoftban = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softbanned {member.mention}, because: {reason}', color=0x00FF00)
     ssoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=ssoftban)
-    return await channel.send(member, f'You have been softbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    return await ctx.channel.send(member, f'You have been softbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 
 @bot.command(pass_context=True, aliases=['cmute', 'channelm', 'cm'])
@@ -590,7 +590,7 @@ async def channelmute(ctx, member : discord.Member, *, reason : str='The channel
     schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelmuted {member.mention}, because: {reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
-    await channel.send(member, f'You have been channelmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.channel.send(member, f'You have been channelmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
 
 
 @bot.command(pass_context=True, aliases=['cumute', 'channelum', 'cunm', 'chum'])
@@ -614,7 +614,7 @@ async def channelunmute(ctx, member : discord.Member, *, reason : str='The chann
     schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelunmuted {member.mention}, because: {reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
-    await channel.send(member, f'You have been channelunmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.channel.send(member, f'You have been channelunmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True)
 async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer has spoken!'):
@@ -634,7 +634,7 @@ async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer ha
     swarn = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned {member.mention}, because: {reason}', color=0x00FF00)
     swarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=swarn)
-    await channel.send(member, f'You have been warned in {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
+    await ctx.channel.send(member, f'You have been warned in {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True)
 async def purge(ctx, amount:int=None):
