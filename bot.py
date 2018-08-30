@@ -39,7 +39,7 @@ async def help(ctx,cmd: str=None):
     if cmd:
         get = bot.get_command(cmd)
         s = discord.Embed(title='Help', color=0xFFFF00)
-        s.add_field(name=f'Command: p.{cmd}', value=f'Help: {get.help}')
+        s.add_field(name=f'p.{cmd}', value=f'{get.help}')
         return await ctx.send(embed=s)
     else:
         return
@@ -89,7 +89,7 @@ async def ping(ctx):
 
 @bot.command(pass_context=True, aliases=['stats', 'statistics', 'information'])
 async def info(ctx):
-    '''Find information about the bot'''
+    '''Find information about the bot.\n`stats` `statistics` `information`'''
     sinfo = discord.Embed(title='Information', color=0x00FF00)
     sinfo.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     sinfo.add_field(name='Servers', value='{} servers.'.format(str(len(bot.guilds))))
@@ -112,9 +112,9 @@ async def suggest(ctx, *, idea):
         ssuggest = discord.Embed(title='Suggest',description='Sent that suggestion over! Thank you!',color=0x00FF00)
         ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await bot.send_message(destination=ctx.message.channel,embed=ssuggest)
-        reactionmessage = await bot.send_message(discord.Object(id='431958602148872222'),embed=osuggest)
-        await bot.add_reaction(reactionmessage, '✅')
-        await bot.add_reaction(reactionmessage, '❌')
+        reactionmessage = await channel.send(discord.Object(id='431958602148872222'),embed=osuggest)
+        await message.add_reaction(reactionmessage, '✅')
+        await message.add_reaction(reactionmessage, '❌')
     else:
         pass
 
@@ -131,7 +131,7 @@ async def bug(ctx, *, issue):
         ssuggest = discord.Embed(title='Bug',description='Sent that issue over! Thank you!',color=0x00FF00)
         ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await bot.send_message(destination=ctx.message.channel,embed=ssuggest)
-        reactionmessage = await bot.send_message(discord.Object(id='431958618791739392'),embed=osuggest)
+        await channel.send(discord.Object(id='431958618791739392'),embed=osuggest)
     else:
         pass
 
