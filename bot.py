@@ -4,6 +4,8 @@ import asyncio
 import inspect
 import sys
 import requests
+import random
+from random import randint
 import os
 import yarl
 import io
