@@ -111,12 +111,12 @@ async def suggest(ctx, *, idea):
         osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         ssuggest = discord.Embed(title='Suggest',description='Sent that suggestion over! Thank you!',color=0x00FF00)
         ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        channel = bot.get_channel(ctx.message.channel)
+        success = bot.get_channel(ctx.message.channel)
         await ctx.channel.send(embed=ssuggest)
-        channel = bot.get_channel('431958618791739392')
-        reactionmessage = await ctx.channel.send(embed=osuggest)
-        await reactionmessage.add_reaction('✅')
-        await reactionmessage.add_reaction('❌')
+        ideachannel = bot.get_channel('431958618791739392')
+        x = await ideachannel.send(embed=osuggest)
+        await x.add_reaction('✅')
+        await x.add_reaction('❌')
     else:
         pass
 
