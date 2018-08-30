@@ -111,8 +111,10 @@ async def suggest(ctx, *, idea):
         osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         ssuggest = discord.Embed(title='Suggest',description='Sent that suggestion over! Thank you!',color=0x00FF00)
         ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await ctx.channel.send(destination=ctx.message.channel,embed=ssuggest)
-        reactionmessage = await ctx.channel.send(discord.Object(id='431958602148872222'),embed=osuggest)
+        channel1 = bot.get_channel(ctx.message.channel)
+        channel2 = bot.get_channel('431958618791739392')
+        await channel1.send(embed=ssuggest)
+        reactionmessage = await channel2.send(embed=osuggest)
         await ctx.message.add_reaction(reactionmessage, '✅')
         await ctx.message.add_reaction(reactionmessage, '❌')
     else:
@@ -130,8 +132,10 @@ async def bug(ctx, *, issue):
         osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         ssuggest = discord.Embed(title='Bug',description='Sent that issue over! Thank you!',color=0x00FF00)
         ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await ctx.channel.send(destination=ctx.message.channel,embed=ssuggest)
-        await ctx.channel.send(discord.Object(id='431958618791739392'),embed=osuggest)
+        channel1 = bot.get_channel(ctx.message.channel)
+        channel2 = bot.get_channel('431958618791739392')
+        await channel1.send(embed=ssuggest)
+        await channel2.send(embed=osuggest)
     else:
         pass
 
