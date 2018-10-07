@@ -88,7 +88,7 @@ async def ping(ctx):
     ping1 = discord.Embed(Title='Ping', color=0x00FF00)
     ping1.add_field(name='Pong!', value='{} milliseconds.'.format(int((round(ping2 * 1000)))))
     ping1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await ctx.message.edit(ping3, embed=ping1)
+    await ctx.message.edit(embed=ping1)
 
 @bot.command(pass_context=True, aliases=['stats', 'statistics', 'information'])
 async def info(ctx):
