@@ -80,12 +80,12 @@ async def restart(ctx):
 async def ping(ctx):
     '''Find the response time in milliseconds.\n`latency` `pong`'''
     ptime = time.time()
-    embed = discord.Embed(Title='Ping', color=0x00FF00)
+    embed = discord.Embed(Title='Ping', color=0x00FF00,timestamp = datetime.datetime.utcnow())
     embed.add_field(name='Pong!', value='Calculating...')
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     ping3 = await ctx.send(embed=embed)
     ping2 = time.time() - ptime
-    ping1 = discord.Embed(Title='Ping', color=0x00FF00)
+    ping1 = discord.Embed(Title='Ping', color=0x00FF00,timestamp = datetime.datetime.utcnow())
     ping1.add_field(name='Pong!', value='{} milliseconds.'.format(int((round(ping2 * 1000)))))
     ping1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ping3.edit(embed=ping1)
@@ -93,7 +93,7 @@ async def ping(ctx):
 @bot.command(pass_context=True, aliases=['stats', 'statistics', 'information'])
 async def info(ctx):
     '''Find information about the bot.\n`stats` `statistics` `information`'''
-    sinfo = discord.Embed(title='Information', color=0x00FF00)
+    sinfo = discord.Embed(title='Information', color=0x00FF00,timestamp = datetime.datetime.utcnow())
     sinfo.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     sinfo.add_field(name='Servers', value='{} servers.'.format(str(len(bot.guilds))))
     sinfo.add_field(name='Discord.py version', value='Version {}'.format(discord.__version__))
@@ -102,56 +102,40 @@ async def info(ctx):
     sinfo.set_thumbnail(url = bot.user.avatar_url)
     await ctx.send(embed=sinfo)
 
-@bot.command(pass_context=True,aliases=['idea','suggestion','ideas'])
-async def suggest(ctx, *, idea=None):
-    '''Suggest something.\n`idea` `suggestion` `ideas`'''
-    if idea == None:
-        nsuggest = discord.Embed(title='Error',description='Specify a suggestion!',color=0xFF0000)
-        nsuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await ctx.send(embed=nsuggest)
-    if idea:
-        osuggest = discord.Embed(title='Suggest',description=idea,color=0x00FF00)
-        osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        ssuggest = discord.Embed(title='Suggest',description='Sent that suggestion over! Thank you!',color=0x00FF00)
-        ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        xx = bot.get_channel(431958602148872222)
-        x = await xx.send(embed=osuggest)
-        await x.add_reaction('✅')
-        await x.add_reaction('❌')
-    else:
-        pass
-@bot.command(pass_context=True)
-async def ooff(ctx,*,suggestion=None):
-    """Give a suggestion to me"""
-    if suggestion==None:
-        return await ctx.send("❌ | You need to add a suggestion")
-    embed=discord.Embed(description=suggestion,color=0x00ff80, timestamp = datetime.datetime.utcnow())
+@bot.command(pass_context=True,aliases=['idea','suggestion','ideas','suggestions'])
+async def suggest(ctx, *,idea=None):
+    '''Suggest something.\n`idea` `suggestion` `ideas` `suggestions`'''
+    if idea==None:
+        error=discord.Embed(title='Error',description='Specify a suggestion!',color=0xFF0000,timestamp = datetime.datetime.utcnow())
+        error.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=error)
+    embed=discord.Embed(description=idea,color=0x00ff80, timestamp = datetime.datetime.utcnow())
     embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-    embed.set_footer(text=f"From {ctx.author.guild}")
-    xd = bot.get_channel(431958602148872222)
-    x = await xd.send(embed=embed)
+    embed.set_footer(text=f"{ctx.author.guild}")
+    xx = bot.get_channel(431958602148872222)
+    x = await xx.send(embed=embed)
     await x.add_reaction("✅")
     await x.add_reaction("❌")
-    await ctx.send("✅ | Your suggestion has been made! kthx")
+    success=discord.Embed(title='Suggestion',description='Thanks for suggesting an idea!',color=0x00FF00,timestamp = datetime.datetime.utcnow())
+    success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await ctx.send(embed=success)
 
 @bot.command(pass_context=True,aliases=['issue','bugs','issues'])
-async def bug(ctx, *, issue):
+async def bug(ctx, *, issue=None):
     '''Report bugs and issues here.\n`issue` `bugs` `issues`'''
-    if issue == None:
-        nsuggest = discord.Embed(title='Error',description='Specify a bug/issue!',color=0xFF0000)
-        nsuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await ctx.send(embed=nsuggest)
-    if issue:
-        osuggest = discord.Embed(title='Bug',description=issue,color=0x00FF00)
-        osuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        ssuggest = discord.Embed(title='Bug',description='Sent that issue over! Thank you!',color=0x00FF00)
-        ssuggest.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        channel1 = bot.get_channel(ctx.message.channel)
-        channel2 = bot.get_channel('431958618791739392')
-        await channel1.send(embed=ssuggest)
-        await channel2.send(embed=osuggest)
-    else:
-        pass
+    if issue==None:
+        error=discord.Embed(title='Error',description='Specify the issue!',color=0xFF0000,timestamp = datetime.datetime.utcnow())
+        error.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=error)
+    embed=discord.Embed(description=issue,color=0x00ff80, timestamp = datetime.datetime.utcnow())
+    embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+    embed.set_footer(text=f"{ctx.author.guild}")
+    xx = bot.get_channel(431958602148872222)
+    await xx.send(embed=embed)
+    success=discord.Embed(title='Bug',description='Thanks for issuing the bug!',color=0x00FF00,timestamp = datetime.datetime.utcnow())
+    success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await ctx.send(embed=success)
+
 
 '''
 '####:'##::: ##:'########::'#######::'########::'##::::'##::::'###::::'########:'####::'#######::'##::: ##::::'###::::'##:::::::
