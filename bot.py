@@ -103,7 +103,7 @@ async def info(ctx):
     await ctx.send(embed=sinfo)
 
 @bot.command(pass_context=True,aliases=['idea','suggestion','ideas'])
-async def suggest(ctx, *, idea):
+async def suggest(ctx, *, idea=None):
     '''Suggest something.\n`idea` `suggestion` `ideas`'''
     if idea == None:
         nsuggest = discord.Embed(title='Error',description='Specify a suggestion!',color=0xFF0000)
@@ -120,6 +120,19 @@ async def suggest(ctx, *, idea):
         await x.add_reaction('❌')
     else:
         pass
+@bot.command(pass_context=True)
+async def ooff(self, ctx,*,suggestion=None):
+"""Give a suggestion to me"""
+    if suggestion==None:
+        return await ctx.send("❌ | You need to add a suggestion")
+    embed=discord.Embed(description=suggestion,color=0x00ff80, timestamp = datetime.datetime.utcnow())
+    embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+    embed.set_footer(text=f"From {ctx.author.guild}")
+    xd = self.bot.get_channel(457623659369070642)
+    x = await xd.send(embed=embed)
+    await x.add_reaction("✅")
+    await x.add_reaction("❌")
+    await ctx.send("✅ | Your suggestion has been made! kthx")
 
 @bot.command(pass_context=True,aliases=['issue','bugs','issues'])
 async def bug(ctx, *, issue):
