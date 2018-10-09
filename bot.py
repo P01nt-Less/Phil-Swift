@@ -640,12 +640,9 @@ async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer ha
     await ctx.channel.send(member, f'You have been warned in {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True)
+@commands.has_permissions(manage_messages=True)
 async def purge(ctx, amount:int=None):
     '''Purge a number of messages!\nUsage: !purge <amount>\nAliases: None\nPermissions: Manage Messages'''
-    if not ctx.message.author.server_permissions.manage_messages:
-        ppurge = discord.Embed(title='Error', description='You don\'t have permission to purge messages!', color=0xFF0000)
-        ppurge.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ppurge)
     if amount == None:
         apurge = discord.Embed(title='Error', description='You must specify an amount!', color=0xFF0000)
         apurge.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
