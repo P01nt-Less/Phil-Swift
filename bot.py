@@ -121,14 +121,14 @@ async def suggest(ctx, *, idea=None):
     else:
         pass
 @bot.command(pass_context=True)
-async def ooff(self, ctx,*,suggestion=None):
+async def ooff(ctx,*,suggestion=None):
     """Give a suggestion to me"""
     if suggestion==None:
         return await ctx.send("❌ | You need to add a suggestion")
     embed=discord.Embed(description=suggestion,color=0x00ff80, timestamp = datetime.datetime.utcnow())
     embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     embed.set_footer(text=f"From {ctx.author.guild}")
-    xd = self.bot.get_channel(431958602148872222)
+    xd = bot.get_channel(431958602148872222)
     x = await xd.send(embed=embed)
     await x.add_reaction("✅")
     await x.add_reaction("❌")
