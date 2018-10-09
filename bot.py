@@ -122,7 +122,7 @@ async def suggest(ctx, *, idea=None):
         pass
 @bot.command(pass_context=True)
 async def ooff(self, ctx,*,suggestion=None):
-"""Give a suggestion to me"""
+    """Give a suggestion to me"""
     if suggestion==None:
         return await ctx.send("❌ | You need to add a suggestion")
     embed=discord.Embed(description=suggestion,color=0x00ff80, timestamp = datetime.datetime.utcnow())
