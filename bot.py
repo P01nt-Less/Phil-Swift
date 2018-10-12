@@ -128,7 +128,7 @@ async def bug(ctx, *, issue=None):
         error=discord.Embed(title='Error',description='Specify the issue!')
         error.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=error)
-    embed=discord.Embed(description=Issue,color=0x00ff80, timestamp = datetime.datetime.utcnow())
+    embed=discord.Embed(description=issue,color=0x00ff80, timestamp = datetime.datetime.utcnow())
     embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     embed.set_footer(text=f"{ctx.author.guild}")
     xx = bot.get_channel(431958618791739392)
@@ -154,13 +154,17 @@ async def cryptocurrency(ctx, coin:str=None):
     '''Find out cryptocurrency rates.\n`cc`'''
     r = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=' + str(coin) + '&tsyms=USD')
     json = r.json()
+    cr = requests.get("https://www.cryptocompare.com/api/data/coinlist/")
+    cjson = cr.json()
+    coinName = cjson['Data'][coin]['FullName']
+    coinImage = cjson['BaseImageUrl'] + cjson['Data'][coin]['ImageUrl']
     if r.status_code == 200:
         if coin == None:
             ncryptocurrency = discord.Embed(title='Error', description='Specify the cryptocurrency symbol, not cryptocurreny name!', color=0xFF0000)
             ncryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ncryptocurrency)
         if coin:
-            scryptocurrency = discord.Embed(title='Cryptocurrency', description='Information about the cryptocurrency, {}.'.format(str(coin)), color=0x00FF00)
+            scryptocurrency = discord.Embed(title='Cryptocurrency', description='Information about the cryptocurrency, {}.'.format(str(coin)), color=0x00FF00,icon_url=coinImage)
             scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'])
             scryptocurrency.add_field(name='Highest Price Today', value=json['DISPLAY'][str(coin)]['USD']['HIGHDAY'])
