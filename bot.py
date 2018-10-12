@@ -218,10 +218,10 @@ async def calchelp(ctx):
     calchelp3 = discord.Embed(title='Tests', description='`isInteger(x)` Test whether a value is an integer number.\n`isNaN(x)` Test whether a value is NaN (not a number).\n`isNegative(x)` Test whether a value is negative: smaller than zero\n`isNumeric(x)` Test whether a value is an numeric value.\n`isPositive(x)` Test whether a value is positive: larger than zero.\n`isPrime(x)` Test whether a value is prime: has no divisors other than itself and one.\n`isZero(x)` Test whether a value is zero.',color=0xFFFF00)
     calchelp4 = discord.Embed(title='Constants', description='`e`,`E` Euler’s number, the base of the natural logarithm. `2.718281828459045`\n`i` Imaginary unit, defined as ii=-1. A complex number is described as a + bi, where a is the real part, and b is the imaginary part. `sqrt(-1)`\n`Infinity` Infinity, a number which is larger than the maximum number that can be handled by a floating point number. `Infinity`\n `LN2` Returns the natural logarithm of 2. `0.6931471805599453`\n`LN10` Returns the natural logarithm of 10.	`2.302585092994046`\n`LOG2E` Returns the base-2 logarithm of E.	`1.4426950408889634`\n`LOG10E` Returns the base-10 logarithm of E. `0.4342944819032518`\n`NaN` Not a number. `NaN`\n`null` Value null. `null`\n`phi` Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as (1 + sqrt(5)) / 2. `1.618033988749895`\n`pi`,`PI` The number pi is a mathematical constant that is the ratio of a circle\'s circumference to its diameter. `3.141592653589793`\n`SQRT1_2` Returns the square root of 1/2. `0.7071067811865476`\n`SQRT2` Returns the square root of 2. `1.4142135623730951`\n`tau` Tau is the ratio constant of a circle\'s circumference to radius, equal to 2 * pi. `6.283185307179586`\n`undefined` An undefined value. Preferably, use null to indicate undefined values. `undefined`\n `version` Returns the version number of math.js. For example `0.24.1`',color=0xFFFF00)
     calchelp4.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await bot.send_message(ctx.message.author, embed=calchelp1)
-    await bot.send_message(ctx.message.author, embed=calchelp2)
-    await bot.send_message(ctx.message.author, embed=calchelp3)
-    await bot.send_message(ctx.message.author, embed=calchelp4)
+    await ctx.send(embed=calchelp1)
+    await ctx.send(embed=calchelp2)
+    await ctx.send(embed=calchelp3)
+    await ctx.send(embed=calchelp4)
 
 '''
 '########:'##::::'##:'##::: ##:
