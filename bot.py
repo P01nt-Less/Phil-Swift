@@ -152,6 +152,7 @@ async def bug(ctx, *, issue=None):
 @bot.command(pass_context=True, aliases=['cc'])
 async def cryptocurrency(ctx, coin:str=None):
     '''Find out cryptocurrency rates.\n`cc`'''
+    coin = coin.upper()
     r = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=' + str(coin) + '&tsyms=USD')
     json = r.json()
     cr = requests.get("https://www.cryptocompare.com/api/data/coinlist/")
@@ -163,7 +164,7 @@ async def cryptocurrency(ctx, coin:str=None):
             return await ctx.send(embed=ncryptocurrency)
         if coin:
             scryptocurrency = discord.Embed(title='Cryptocurrency', description='Information about the cryptocurrency, {}.'.format(str(coin)), color=0x00FF00)
-            scryptocurrency.set_thumbnail(url=cjson['Data'][str(coin)]['ImageUrl'])
+            scryptocurrency.set_thumbnail(url=cjson['BaseImageUrl'] + cjson['Data'][str(coin)]['ImageUrl'])
             scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'])
             scryptocurrency.add_field(name='Highest Price Today', value=json['DISPLAY'][str(coin)]['USD']['HIGHDAY'])
