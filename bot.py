@@ -173,6 +173,7 @@ async def cryptocurrency(ctx, coin:str=None):
             scryptocurrency.add_field(name='Supply', value=json['DISPLAY'][str(coin)]['USD']['SUPPLY'])
             scryptocurrency.add_field(name='Algorithm', value=cjson['Data'][str(coin)]['Algorithm'])
             scryptocurrency.add_field(name='Proof Type', value=cjson['Data'][str(coin)]['ProofType'])
+            scryptocurrency.add_field(name='Rank', value=cjson['Data'][str(coin)]['SortOrder'])
             scryptocurrency.set_footer(text='Cryptocurrency information by https://cryptocompare.com/!')
             return await ctx.send(embed=scryptocurrency)
         else:
