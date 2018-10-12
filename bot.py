@@ -81,12 +81,12 @@ async def restart(ctx):
 async def ping(ctx):
     '''Find the response time in milliseconds.\n`latency` `pong`'''
     ptime = time.time()
-    embed = discord.Embed(Title='Ping', color=0x00FF00,timestamp = datetime.datetime.utcnow())
+    embed = discord.Embed(Title='Ping', color=0x00FF00)
     embed.add_field(name='Pong!', value='Calculating...')
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     ping3 = await ctx.send(embed=embed)
     ping2 = time.time() - ptime
-    ping1 = discord.Embed(Title='Ping', color=0x00FF00,timestamp = datetime.datetime.utcnow())
+    ping1 = discord.Embed(Title='Ping', color=0x00FF00)
     ping1.add_field(name='Pong!', value='{} milliseconds.'.format(int((round(ping2 * 1000)))))
     ping1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ping3.edit(embed=ping1)
@@ -94,7 +94,7 @@ async def ping(ctx):
 @bot.command(pass_context=True, aliases=['stats', 'statistics', 'information'])
 async def info(ctx):
     '''Find information about the bot.\n`stats` `statistics` `information`'''
-    sinfo = discord.Embed(title='Information', color=0x00FF00,timestamp = datetime.datetime.utcnow())
+    sinfo = discord.Embed(title='Information', color=0x00FF00)
     sinfo.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     sinfo.add_field(name='Servers', value='{} servers.'.format(str(len(bot.guilds))))
     sinfo.add_field(name='Discord.py version', value='Version {}'.format(discord.__version__))
@@ -107,7 +107,7 @@ async def info(ctx):
 async def suggest(ctx, *,idea=None):
     '''Suggest something.\n`idea` `suggestion` `ideas` `suggestions`'''
     if idea==None:
-        error=discord.Embed(title='Error',description='Specify a suggestion!',color=0xFF0000,timestamp = datetime.datetime.utcnow())
+        error=discord.Embed(title='Error',description='Specify a suggestion!',color=0xFF0000)
         error.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=error)
     embed=discord.Embed(description=idea,color=0x00ff80, timestamp = datetime.datetime.utcnow())
@@ -117,7 +117,7 @@ async def suggest(ctx, *,idea=None):
     x = await xx.send(embed=embed)
     await x.add_reaction("✅")
     await x.add_reaction("❌")
-    success=discord.Embed(title='Suggestion',description='Thanks for suggesting an idea!',color=0x00FF00,timestamp = datetime.datetime.utcnow())
+    success=discord.Embed(title='Suggestion',description='Thanks for suggesting an idea!',color=0x00FF00)
     success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=success)
 
@@ -125,15 +125,15 @@ async def suggest(ctx, *,idea=None):
 async def bug(ctx, *, issue=None):
     '''Report bugs and issues here.\n`issue` `bugs` `issues`'''
     if issue==None:
-        error=discord.Embed(title='Error',description='Specify the issue!',color=0xFF0000,timestamp = datetime.datetime.utcnow())
+        error=discord.Embed(title='Error',description='Specify the issue!')
         error.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=error)
-    embed=discord.Embed(description=issue,color=0x00ff80, timestamp = datetime.datetime.utcnow())
+    embed=discord.Embed(description=Issue,color=0x00ff80, timestamp = datetime.datetime.utcnow())
     embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     embed.set_footer(text=f"{ctx.author.guild}")
-    xx = bot.get_channel(431958602148872222)
+    xx = bot.get_channel(431958618791739392)
     await xx.send(embed=embed)
-    success=discord.Embed(title='Bug',description='Thanks for issuing the bug!',color=0x00FF00,timestamp = datetime.datetime.utcnow())
+    success=discord.Embed(title='Bug',description='Thanks for issuing the bug!',color=0x00FF00)
     success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=success)
 
