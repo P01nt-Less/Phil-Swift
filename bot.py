@@ -156,14 +156,13 @@ async def cryptocurrency(ctx, coin:str=None):
     json = r.json()
     cr = requests.get("https://www.cryptocompare.com/api/data/coinlist/")
     cjson = cr.json()
-    coinImage = cjson['BaseImageUrl'] + cjson['Data'][coin]['ImageUrl']
     if r.status_code == 200:
         if coin == None:
             ncryptocurrency = discord.Embed(title='Error', description='Specify the cryptocurrency symbol, not cryptocurreny name!', color=0xFF0000)
             ncryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ncryptocurrency)
         if coin:
-            scryptocurrency = discord.Embed(title='Cryptocurrency', description='Information about the cryptocurrency, {}.'.format(str(coin)), color=0x00FF00,icon_url=coinImage)
+            scryptocurrency = discord.Embed(title='Cryptocurrency', description='Information about the cryptocurrency, {}.'.format(str(coin)), color=0x00FF00,icon_url=cjson['Data'][str(coin)]['ImageURL'])
             scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'])
             scryptocurrency.add_field(name='Highest Price Today', value=json['DISPLAY'][str(coin)]['USD']['HIGHDAY'])
