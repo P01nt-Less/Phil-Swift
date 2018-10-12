@@ -163,7 +163,7 @@ async def cryptocurrency(ctx, coin:str=None):
             ncryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ncryptocurrency)
         if coin:
-            scryptocurrency = discord.Embed(title='Cryptocurrency', description='Information about the cryptocurrency, {}.'.format(str(coin)), color=0x00FF00)
+            scryptocurrency = discord.Embed(title='Cryptocurrency', description='{}.'.format(cjson['Data'][str(coin)]['FullName']), color=0x00FF00)
             scryptocurrency.set_thumbnail(url=cjson['BaseImageUrl'] + cjson['Data'][str(coin)]['ImageUrl'])
             scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'])
@@ -171,7 +171,9 @@ async def cryptocurrency(ctx, coin:str=None):
             scryptocurrency.add_field(name='Lowest Price Today', value=json['DISPLAY'][str(coin)]['USD']['LOWDAY'])
             scryptocurrency.add_field(name='Last Updated', value=json['DISPLAY'][str(coin)]['USD']['LASTUPDATE'])
             scryptocurrency.add_field(name='Supply', value=json['DISPLAY'][str(coin)]['USD']['SUPPLY'])
-            scryptocurrency.set_footer(text='Cryptocurrency rates by https://cryptocompare.com/!')
+            scryptocurrency.add_field(name='Algorithm', value=cjson['Data'][str(coin)]['Algorithm'])
+            scryptocurrency.add_field(name='Proof Type', value=cjson['Data'][str(coin)]['ProofType'])
+            scryptocurrency.set_footer(text='Cryptocurrency information by https://cryptocompare.com/!')
             return await ctx.send(embed=scryptocurrency)
         else:
             return
