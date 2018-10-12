@@ -49,7 +49,7 @@ async def help(ctx,cmd: str=None):
         return
 
 @bot.command(pass_context=True)
-@commands.check(owner)
+@commands.is_owner()
 async def say(ctx, *, text: str=None):
     '''Make the bot say something'''
     await ctx.message.delete()
@@ -597,6 +597,7 @@ async def channelmute(ctx, member : discord.Member, *, reason : str='The channel
 
 
 @bot.command(pass_context=True, aliases=['cumute', 'channelum', 'cunm', 'chum'])
+@commands.has_permissions(manage_messages=True)
 async def channelunmute(ctx, member : discord.Member, *, reason : str='The channel mute hammer has spoken!'):
     '''Unmute someone in a channel.\nUsage: !channelunmute <member> [reason]\nAliases: !cumute,!channelum,!cunm,!chum\nPermissions: Manage Messages'''
     if not ctx.message.author.server_permissions.manage_messages:
@@ -620,12 +621,9 @@ async def channelunmute(ctx, member : discord.Member, *, reason : str='The chann
     await ctx.channel.send(member, f'You have been channelunmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
 
 @bot.command(pass_context=True)
+@commands.has_permissions(kick_members=True)
 async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer has spoken!'):
     '''Warn someone about doing something wrong!\nUsage: !warn <member> [reason]\nAliases: None\nPermissions: Kick Members'''
-    if not ctx.message.author.server_permissions.kick_members:
-        pwarn = discord.Embed(title='Error', description='You don\'t have permission to warn members!', color=0xFF0000)
-        pwarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=pwarn)
     if not member:
         mwarn = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mwarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
