@@ -368,7 +368,7 @@ async def userinfo(ctx, user:discord.Member = None):
     suserinfo.add_field(name ='ID', value=str(user.id))
     suserinfo.add_field(name ='Nickname', value=str(user.nick))
     suserinfo.add_field(name ='Joined at', value=str(user.joined_at))
-    suserinfo.add_field(name ='Game Playing',value=str(user.game))
+    suserinfo.add_field(name ='Game Playing',value=str(user.activity))
     suserinfo.add_field(name ='Status',value=str(user.status))
     suserinfo.add_field(name ='Highest Role',value=str(user.top_role))
     suserinfo.set_footer(text =f'Created at: {str(user.created_at.strftime("%A, %B %d %Y @ %H:%M:%S %p"))}')
