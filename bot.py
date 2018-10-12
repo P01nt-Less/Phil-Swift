@@ -156,7 +156,6 @@ async def cryptocurrency(ctx, coin:str=None):
     json = r.json()
     cr = requests.get("https://www.cryptocompare.com/api/data/coinlist/")
     cjson = cr.json()
-    coinName = cjson['Data'][coin]['FullName']
     coinImage = cjson['BaseImageUrl'] + cjson['Data'][coin]['ImageUrl']
     if r.status_code == 200:
         if coin == None:
