@@ -166,7 +166,7 @@ async def cryptocurrency(ctx, coin:str):
             scryptocurrency = discord.Embed(title='Cryptocurrency', description='{}.'.format(cjson['Data'][str(coin)]['FullName']), color=0x00FF00)
             scryptocurrency.set_thumbnail(url=cjson['BaseImageUrl'] + cjson['Data'][str(coin)]['ImageUrl'])
             scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'] +'\n' + json['DISPLAY'][str(coin)]['EUR']['PRICE'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['PRICE'])
+            scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'] + '\n' + json['DISPLAY'][str(coin)]['EUR']['PRICE'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['PRICE'])
             scryptocurrency.add_field(name='Highest Price Today', value=json['DISPLAY'][str(coin)]['USD']['HIGHDAY'] + json['DISPLAY'][str(coin)]['EUR']['HIGHDAY'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['HIGHDAY'])
             scryptocurrency.add_field(name='Lowest Price Today', value=json['DISPLAY'][str(coin)]['USD']['LOWDAY'] + json['DISPLAY'][str(coin)]['EUR']['LOWDAY'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['LOWDAY'])
             scryptocurrency.add_field(name='Last Updated', value=json['DISPLAY'][str(coin)]['USD']['LASTUPDATE'] + json['DISPLAY'][str(coin)]['EUR']['LASTUPDATE'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['LASTUPDATE'])
