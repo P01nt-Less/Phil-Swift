@@ -150,10 +150,10 @@ async def bug(ctx, *, issue=None):
 
 
 @bot.command(pass_context=True, aliases=['cc'])
-async def cryptocurrency(ctx, coin:str=None):
+async def cryptocurrency(ctx, coin:str):
     '''Find out cryptocurrency rates.\n`cc`'''
     coin = coin.upper()
-    r = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=' + str(coin) + '&tsyms=USD')
+    r = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=' + str(coin) + '&tsyms=USD,EUR,GBP')
     json = r.json()
     cr = requests.get("https://www.cryptocompare.com/api/data/coinlist/")
     cjson = cr.json()
@@ -166,11 +166,11 @@ async def cryptocurrency(ctx, coin:str=None):
             scryptocurrency = discord.Embed(title='Cryptocurrency', description='{}.'.format(cjson['Data'][str(coin)]['FullName']), color=0x00FF00)
             scryptocurrency.set_thumbnail(url=cjson['BaseImageUrl'] + cjson['Data'][str(coin)]['ImageUrl'])
             scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'])
-            scryptocurrency.add_field(name='Highest Price Today', value=json['DISPLAY'][str(coin)]['USD']['HIGHDAY'])
-            scryptocurrency.add_field(name='Lowest Price Today', value=json['DISPLAY'][str(coin)]['USD']['LOWDAY'])
-            scryptocurrency.add_field(name='Last Updated', value=json['DISPLAY'][str(coin)]['USD']['LASTUPDATE'])
-            scryptocurrency.add_field(name='Supply', value=json['DISPLAY'][str(coin)]['USD']['SUPPLY'])
+            scryptocurrency.add_field(name='Price', value=json['DISPLAY'][str(coin)]['USD']['PRICE'] +'\n' + json['DISPLAY'][str(coin)]['EUR']['PRICE'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['PRICE'])
+            scryptocurrency.add_field(name='Highest Price Today', value=json['DISPLAY'][str(coin)]['USD']['HIGHDAY'] + json['DISPLAY'][str(coin)]['EUR']['HIGHDAY'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['HIGHDAY'])
+            scryptocurrency.add_field(name='Lowest Price Today', value=json['DISPLAY'][str(coin)]['USD']['LOWDAY'] + json['DISPLAY'][str(coin)]['EUR']['LOWDAY'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['LOWDAY'])
+            scryptocurrency.add_field(name='Last Updated', value=json['DISPLAY'][str(coin)]['USD']['LASTUPDATE'] + json['DISPLAY'][str(coin)]['EUR']['LASTUPDATE'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['LASTUPDATE'])
+            scryptocurrency.add_field(name='Supply', value=json['DISPLAY'][str(coin)]['USD']['SUPPLY'] + json['DISPLAY'][str(coin)]['EUR']['SUPPLY'] + '\n' + json['DISPLAY'][str(coin)]['GBP']['SUPPLY'])
             scryptocurrency.add_field(name='Algorithm', value=cjson['Data'][str(coin)]['Algorithm'])
             scryptocurrency.add_field(name='Proof Type', value=cjson['Data'][str(coin)]['ProofType'])
             scryptocurrency.add_field(name='Rank', value=cjson['Data'][str(coin)]['SortOrder'])
