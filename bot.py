@@ -51,7 +51,7 @@ async def help(ctx,cmd: str=None):
     else:
         return
 
-@bot.command(pass_context=True)
+@commands.command(pass_context=True)
 @is_owner()
 async def say(ctx, *, text: str=None):
     '''Make the bot say something'''
@@ -59,11 +59,11 @@ async def say(ctx, *, text: str=None):
     await ctx.send(text)
 
 
-@bot.command(pass_context=True, aliases=['shutdown'])
+@commands.command(pass_context=True, aliases=['shutdown'])
 @is_owner()
 async def restart(ctx):
     '''Stop and run the bot again.\n`shutdown`'''
-    embed = discord.Embed(title='Restart', description=f'Sorry, but {ctx.message.author.mention} has forced me to restart. It\'ll only take a moment!', color=0xFF0000)
+    embed = discord.Embed(title='Restart', description=f'Restarting...', color=0xFF0000)
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=embed)
     await bot.logout()
