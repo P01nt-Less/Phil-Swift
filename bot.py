@@ -477,7 +477,7 @@ async def kick(ctx, member : discord.Member=None, *,reason:str=None):
         rkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=rkick)
     try:
-        await discord.Guild.kick(user=member,reason=reason)
+        await self.discord.Guild.kick(user=member,reason=reason)
     except Exception as e:
         if 'Privilege is too low' in str(e):
             ekick = discord.Embed(title='Error', description='The person you are trying to kick has high permissions.', color=0xFF0000)
