@@ -48,7 +48,7 @@ async def help(ctx,cmd: str=None):
 @bot.command(pass_context=True)
 async def say(ctx, *, text: str=None):
     '''Make the bot say something'''
-    if ctx.message.author.id == 276043503514025984
+    if ctx.message.author.id == '276043503514025984'
         await ctx.message.delete()
         return await ctx.send(text)
     else:
@@ -59,7 +59,7 @@ async def say(ctx, *, text: str=None):
 @bot.command(pass_context=True, aliases=['shutdown'])
 async def restart(ctx):
     '''Stop and run the bot again.\n`shutdown`'''
-    if ctx.message.author.id == 276043503514025984
+    if ctx.message.author.id == '276043503514025984'
         embed = discord.Embed(title='Restart', description=f'Restarting...', color=0xFF0000)
         embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await ctx.send(embed=embed)
