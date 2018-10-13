@@ -466,7 +466,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
 
 @bot.command(pass_context=True, aliases=['k'])
 @commands.has_permissions(kick_members=True)
-async def kick(ctx, member : discord.Member=None, *, reason='The kick hammer has spoken!'):
+async def kick(ctx, member : discord.Member=None, *, reason:str=None'):
     '''Kick someone.\nUsage: !kick <member> [reason]\nAliases: !k\nPermissions: Kick Members'''
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
