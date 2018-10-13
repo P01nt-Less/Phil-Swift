@@ -19,12 +19,6 @@ from contextlib import redirect_stdout
 bot = commands.Bot(command_prefix='p.',case_insensitive=True,description='A discord bot.',self_bot=False,owner_id=276043503514025984)
 bot.remove_command('help')
 
-
-def is_owner():
-    async def owner(ctx):
-        return ctx.message.author.id == '276043503514025984'
-    return commands.check(owner)
-
 @bot.event
 async def on_ready():
     print('Success!')
@@ -51,22 +45,29 @@ async def help(ctx,cmd: str=None):
     else:
         return
 
-@commands.command(pass_context=True)
-@is_owner()
+@bot.command(pass_context=True)
 async def say(ctx, *, text: str=None):
     '''Make the bot say something'''
-    await ctx.message.delete()
-    await ctx.send(text)
+    if ctx.message.author.id == 276043503514025984
+        await ctx.message.delete()
+        return await ctx.send(text)
+    else:
+        embed = discord.Embed(title='Error', description=f'Our mighty lord and saviour Phil Swift is not upon us.', color=0xFF0000)
+        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=embed)
 
-
-@commands.command(pass_context=True, aliases=['shutdown'])
-@is_owner()
+@bot.command(pass_context=True, aliases=['shutdown'])
 async def restart(ctx):
     '''Stop and run the bot again.\n`shutdown`'''
-    embed = discord.Embed(title='Restart', description=f'Restarting...', color=0xFF0000)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await ctx.send(embed=embed)
-    await bot.logout()
+    if ctx.message.author.id == 276043503514025984
+        embed = discord.Embed(title='Restart', description=f'Restarting...', color=0xFF0000)
+        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await ctx.send(embed=embed)
+        return await bot.logout()
+    else:
+        embed = discord.Embed(title='Error', description=f'Our mighty lord and saviour Phil Swift is not upon us.', color=0xFF0000)
+        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=embed)
 
 
 '''
