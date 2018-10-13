@@ -359,7 +359,7 @@ async def serverinfo(ctx):
     sserverinfo.add_field(name ='Custom Emotes',value=len(ctx.message.guild.emojis))
     sserverinfo.add_field(name ='Channels',value=len(ctx.message.guild.channels))
     sserverinfo.add_field(name ='Features',value=str(ctx.message.guild.features))
-    sserverinfo.set_footer(text =f'Created at: {str(ctx.message.guild.created_at)}')
+    sserverinfo.set_footer(text =f'Created at: {str(ctx.message.guild.created_at.strftime("%A, %B %d %Y @ %H:%M:%S %p"))}')
     await ctx.send(embed=sserverinfo)
 
 @bot.command(pass_context=True,aliases=['ui'])
@@ -371,7 +371,7 @@ async def userinfo(ctx, user:discord.Member = None):
     suserinfo.set_thumbnail(url = user.avatar_url)
     suserinfo.add_field(name ='ID', value=str(user.id))
     suserinfo.add_field(name ='Nickname', value=str(user.nick))
-    suserinfo.add_field(name ='Joined at', value=str(user.joined_at))
+    suserinfo.add_field(name ='Joined at', value=str(user.joined_at.strftime("%A, %B %d %Y @ %H:%M:%S %p")))
     suserinfo.add_field(name ='Game Playing',value=str(user.activity.name))
     suserinfo.add_field(name ='Status',value=str(user.status))
     suserinfo.add_field(name ='Highest Role',value=str(user.top_role))
