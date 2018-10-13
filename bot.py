@@ -284,13 +284,13 @@ async def comic(ctx):
 @bot.command(pass_context=True)
 async def dog(ctx):
     '''Check out a random cute or funny dog!\nUsage: !dog\nAliases: None\nPermissions: None'''
-    r = requests.get(f'https://api.thedogapi.co.uk/v2/dog.php/')
+    r = requests.get('https://random.dog/woof.json')
     json = r.json()
     if r.status_code == 200:
         sdog = discord.Embed(title='Dog', description='A random cute dog!', color=0x00FF00)
         sdog.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        sdog.set_image(url=json['data'][0]['url'])
-        sdog.set_footer(text='Dogs by http://thedogapi.co.uk/!')
+        sdog.set_image(url=json['url'])
+        sdog.set_footer(text='Dogs by https://random.dog/!')
         return await ctx.send(embed=sdog)
     else:
         rdog = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
@@ -372,7 +372,7 @@ async def userinfo(ctx, user:discord.Member = None):
     suserinfo.add_field(name ='ID', value=str(user.id))
     suserinfo.add_field(name ='Nickname', value=str(user.nick))
     suserinfo.add_field(name ='Joined at', value=str(user.joined_at))
-    suserinfo.add_field(name ='Game Playing',value=str(user.activity))
+    suserinfo.add_field(name ='Game Playing',value=str(user.activity.name))
     suserinfo.add_field(name ='Status',value=str(user.status))
     suserinfo.add_field(name ='Highest Role',value=str(user.top_role))
     suserinfo.set_footer(text =f'Created at: {str(user.created_at.strftime("%A, %B %d %Y @ %H:%M:%S %p"))}')
