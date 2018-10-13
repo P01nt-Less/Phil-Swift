@@ -19,8 +19,11 @@ from contextlib import redirect_stdout
 bot = commands.Bot(command_prefix='p.',case_insensitive=True,description='A discord bot.',self_bot=False,owner_id=276043503514025984)
 bot.remove_command('help')
 
-def owner(ctx):
-    return ctx.message.author.id == '276043503514025984'  # checks if @Pointless#1278 is the author of the command
+
+def is_owner():
+    async def owner(ctx):
+        return ctx.message.author.id == '276043503514025984'
+    return commands.check(owner)
 
 @bot.event
 async def on_ready():
@@ -49,7 +52,7 @@ async def help(ctx,cmd: str=None):
         return
 
 @bot.command(pass_context=True)
-@commands.is_owner()
+@is_owner()
 async def say(ctx, *, text: str=None):
     '''Make the bot say something'''
     await ctx.message.delete()
@@ -57,7 +60,7 @@ async def say(ctx, *, text: str=None):
 
 
 @bot.command(pass_context=True, aliases=['shutdown'])
-@commands.check(owner)
+@is_owner()
 async def restart(ctx):
     '''Stop and run the bot again.\n`shutdown`'''
     embed = discord.Embed(title='Restart', description=f'Sorry, but {ctx.message.author.mention} has forced me to restart. It\'ll only take a moment!', color=0xFF0000)
