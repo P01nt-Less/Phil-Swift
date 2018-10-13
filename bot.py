@@ -35,7 +35,7 @@ async def help(ctx,cmd: str=None):
         e.add_field(name='Utility', value='`part` `roll` `serverinfo` `userinfo`')
         e.add_field(name='Managing', value='`giverole` `takerole`')
         e.add_field(name='Moderation', value='`kick` `ban` `unban` `softban` `channelmute` `channelunmute` `warn` `purge`')
-        e.add_field(name='Owner', value='`say` `restart`')
+        e.add_field(name='Owner', value='`say` `shutdown`')
         await ctx.send(embed=e)
     if cmd:
         get = bot.get_command(cmd)
