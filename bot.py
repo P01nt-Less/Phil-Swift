@@ -466,7 +466,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
 
 @bot.command(pass_context=True, aliases=['k'])
 @commands.has_permissions(kick_members=True)
-async def kick(ctx, member : discord.User=None, *,reason:str=None):
+async def kick(ctx, member : discord.Member=None, *,reason:str=None):
     '''Kick someone.\nUsage: !kick <member> [reason]\nAliases: !k\nPermissions: Kick Members'''
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -477,7 +477,7 @@ async def kick(ctx, member : discord.User=None, *,reason:str=None):
         rkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=rkick)
     try:
-        await member.kick(user=member,reason=reason)
+        await member.kick(reason=reason)
     except Exception as e:
         if 'Privilege is too low' in str(e):
             ekick = discord.Embed(title='Error', description='The person you are trying to kick has high permissions.', color=0xFF0000)
