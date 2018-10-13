@@ -189,7 +189,7 @@ async def cryptocurrency(ctx, coin:str):
 
 @bot.command(pass_context=True, aliases=['math','c'])
 async def calculate(ctx,*, expression):
-    '''Work out expressions and equations.\nUsage: !calculate <expression>\nAliases: !math\nPermissions: None'''
+    '''Work out expressions and equations.\n`math` `c`'''
     r = requests.get('http://api.mathjs.org/v4/?expr=' + urllib.parse.quote_plus(expression))
     text = r.text
     if r.status_code == 200:
@@ -241,7 +241,7 @@ async def calchelp(ctx):
 
 @bot.command(pass_context=True,aliases=['cf'])
 async def coinflip(ctx):
-    '''Flip a coin and either get heads or tails.\nUsage: !coinflip \nAliases: !cf\nPermissions: None'''
+    '''Flip a coin and either get heads or tails.\n`cf`'''
     scoinflip = discord.Embed(title='Coinflip', description=random.choice(['Heads', 'Tails']), color=0xFF0000)
     scoinflip.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await ctx.send(embed=scoinflip)
@@ -249,7 +249,7 @@ async def coinflip(ctx):
 
 @bot.command(pass_context=True, name='8ball', aliases=['8b', 'eb'])
 async def eightball(ctx, question:str=None):
-    '''Ask a question and let the magic eightball answer for you!\nUsage: !eightball <question> \nAliases: None\nPermissions: None'''
+    '''Ask a question and let the magic eightball answer for you!\n`8b` `eb`'''
     if question == None:
         neightball = discord.Embed(title='Error', description='Specify the question!', color=0xFF0000)
         neightball.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -266,7 +266,7 @@ async def eightball(ctx, question:str=None):
 
 @bot.command(pass_context=True, aliases=['xkcd','co'])
 async def comic(ctx):
-    '''Check out a random comic, with a total of 2013 comics!.\nUsage: !comic,!co\nAliases: !xkcd\nPermissions: None'''
+    '''Check out a random comic, with a total of 2013 comics!.\n`co`,`xkcd`'''
     r = requests.get(f'https://xkcd.com/{random.randint(1,2013)}/info.0.json')
     json = r.json()
     if r.status_code == 200:
@@ -283,7 +283,7 @@ async def comic(ctx):
 
 @bot.command(pass_context=True)
 async def dog(ctx):
-    '''Check out a random cute or funny dog!\nUsage: !dog\nAliases: None\nPermissions: None'''
+    '''Check out a random cute or funny dog!'''
     r = requests.get('https://random.dog/woof.json')
     json = r.json()
     if r.status_code == 200:
@@ -299,7 +299,7 @@ async def dog(ctx):
 
 @bot.command(pass_context=True)
 async def cat(ctx):
-    '''Check out a random cute or funny cat!\nUsage: !cat\nAliases: None\nPermissions: None'''
+    '''Check out a random cute or funny cat!'''
     r = requests.get(f'https://catapi.glitch.me/random/')
     json = r.json()
     if r.status_code == 200:
@@ -328,14 +328,14 @@ async def cat(ctx):
 
 @bot.command(pass_context=True)
 async def part(ctx, *choice):
-    '''Take a letter out of any word!\nUsage: !part <word>\nAliases: None\nPermissions: None'''
+    '''Take a letter out of any word!'''
     spart = discord.Embed(title='Part', description=str(random.choice(*choice)), color=0x00FF00)
     spart.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await ctx.send(embed=spart)
 
 @bot.command(pass_context=True)
 async def roll(ctx, maxnumber:int=6):
-    '''A roll command!\nUsage: !roll <maxnumber>\nAliases: None\nPermissions: None'''
+    '''Roll a dice, with a custom maximum number!'''
     if maxnumber == None:
         nroll = discord.Embed(title='Error', description=f'Specify a maximum number!', color=0xFF0000)
         nroll.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -346,7 +346,7 @@ async def roll(ctx, maxnumber:int=6):
 
 @bot.command(pass_context=True,aliases=['si'])
 async def serverinfo(ctx):
-    '''See information about the server!\nUsage: !serverinfo\nAliases: !si\nPermissions: None'''
+    '''See information about the server!\n`si`'''
     sserverinfo = discord.Embed(title = (str(ctx.message.guild.name)),colour=0x00FF00)
     sserverinfo.set_thumbnail(url = ctx.message.guild.icon_url)
     sserverinfo.add_field(name='Owner', value=str(ctx.message.guild.owner))
@@ -364,7 +364,7 @@ async def serverinfo(ctx):
 
 @bot.command(pass_context=True,aliases=['ui'])
 async def userinfo(ctx, user:discord.Member = None):
-    '''See information about a user!\nUsage: !userinfo\nAliases: !ui\nPermissions: None'''
+    '''See information about a user!\n`ui`'''
     if user is None:
         user = ctx.message.author
     suserinfo = discord.Embed(title = (str(user.name)),colour=0x00FF00)
@@ -389,12 +389,9 @@ async def userinfo(ctx, user:discord.Member = None):
 
 
 @bot.command(pass_context=True, aliases=['gr'])
+@commands.has_permissions(manage_roles=True)
 async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
     '''Give a role to someone\nUsage: !giverole <member> <role>\nAliases: !gr\nPermissions: Manage Roles'''
-    if not ctx.message.author.server_permissions.manage_roles:
-        pgiverole = discord.Embed(title='Error', description='You don\'t have permission to give roles to members!', color=0xFF0000)
-        pgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=pgiverole)
     if not member:
         mgiverole = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -427,12 +424,9 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
 
 
 @bot.command(pass_context=True, aliases=['tr'])
+@commands.has_permissions(manage_roles=True)
 async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
     '''Take a role away from someone\nUsage: !takerole <member> <role>\nAliases: !tr\nPermissions: Manage Roles'''
-    if not ctx.message.author.server_permissions.manage_roles:
-        ptakerole = discord.Embed(title='Error', description='You don\'t have permission to give roles to members!', color=0xFF0000)
-        ptakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ptakerole)
     if not member:
         mtakerole = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mtakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -471,12 +465,9 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
 
 
 @bot.command(pass_context=True, aliases=['k'])
+@commands.has_permissions(kick_members=True)
 async def kick(ctx, member : discord.Member=None, *, reason='The kick hammer has spoken!'):
     '''Kick someone.\nUsage: !kick <member> [reason]\nAliases: !k\nPermissions: Kick Members'''
-    if not ctx.message.author.server_permissions.kick_members:
-        pkick = discord.Embed(title='Error', description='You don\'t have permission to kick members!', color=0xFF0000)
-        pkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=pkick)
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -501,12 +492,9 @@ async def kick(ctx, member : discord.Member=None, *, reason='The kick hammer has
 
 
 @bot.command(pass_context=True, aliases=['b'])
+@commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has spoken!'):
     '''Ban someone\nUsage: !ban <member> [reason]\nAliases: !b\nPermissions: Ban Members'''
-    if not ctx.message.author.server_permissions.ban_members:
-        pban = discord.Embed(title='Error', description='You don\'t have permission to ban members!', color=0xFF0000)
-        pban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=pban)
     if not member:
         mban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -533,10 +521,6 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
 async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
     await ctx.send('If you know how to make a working unban command that can unban people who are not in this server, using at least IDs, but usernames more preferable, in Python, please contact Pointless#1278 and you will be credited and your name will be placed onto the footer of the !unban command\'s embed! This will help me, you and everyone else who uses the bot.')
-    if not ctx.message.author.server_permissions.ban_members:
-        punban = discord.Embed(title='Error', description='You don\'t have permission to unban members!', color=0xFF0000)
-        punban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=punban)
     if not member:
         munban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         munban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -553,12 +537,9 @@ async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
 """
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
+@commands.has_permissions(ban_members=True)
 async def softban(ctx, member : discord.Member=None, *, reason='The softban hammer has spoken!'):
     '''Ban then unban someone to remove all messages sent by the user within 7 days.\nUsage: !softban <member> [reason]\nAliases: !sban, !sb\nPermissions: Ban Members'''
-    if not ctx.message.author.server_permissions.ban_members:
-        psoftban = discord.Embed(title='Error', description='You don\'t have permission to softban members!', color=0xFF0000)
-        psoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=psoftban)
     if not member:
         msoftban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         msoftban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -584,12 +565,9 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
 
 
 @bot.command(pass_context=True, aliases=['cmute', 'channelm', 'cm'])
+@commands.has_permissions(manage_messages=True)
 async def channelmute(ctx, member : discord.Member, *, reason : str='The channel mute hammer has spoken!'):
     '''Mute someone in a channel.\nUsage: !channelmute <member> [reason]\nAliases: !cmute, !channelm, !cm\nPermissions: Manage Messages'''
-    if not ctx.message.author.server_permissions.manage_messages:
-        pchannelmute = discord.Embed(title='Error', description='You don\'t have permission to channelmute members!', color=0xFF0000)
-        pchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=pchannelmute)
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -611,10 +589,6 @@ async def channelmute(ctx, member : discord.Member, *, reason : str='The channel
 @commands.has_permissions(manage_messages=True)
 async def channelunmute(ctx, member : discord.Member, *, reason : str='The channel mute hammer has spoken!'):
     '''Unmute someone in a channel.\nUsage: !channelunmute <member> [reason]\nAliases: !cumute,!channelum,!cunm,!chum\nPermissions: Manage Messages'''
-    if not ctx.message.author.server_permissions.manage_messages:
-        pchannelmute = discord.Embed(title='Error', description='You don\'t have permission to channelunmute members!', color=0xFF0000)
-        pchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=pchannelmute)
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         mchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
