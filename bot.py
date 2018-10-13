@@ -484,10 +484,7 @@ async def kick(ctx, member : discord.Member=None, *,reason:str=None):
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ekick)
         else:
-            try:
-                await bot.kick(member)
-            except:
-                ctx.send('idk whats happening')
+            await ctx.send(e)
     skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await ctx.send(embed=skick)
