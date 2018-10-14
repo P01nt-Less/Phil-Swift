@@ -539,7 +539,8 @@ async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoke
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
-    if member is not None:
+    try:
+        if member is not None:
         await ctx.guild.unban(member.user,reason=reason)
         sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
         sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -547,8 +548,10 @@ async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoke
         message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
         message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await member.send(embed=message)
-    else:
-        await ctx.send('I couldn\'t find that user.')
+        else:
+            await ctx.send('I couldn\'t find that user.')
+    except Exception as e:
+        await ctx.send(e)
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
