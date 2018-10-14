@@ -541,13 +541,13 @@ async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoke
         return await ctx.send(embed=runban)
     try:
         if member is not None:
-        await ctx.guild.unban(member.user,reason=reason)
-        sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
-        sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await ctx.send(embed=sunban)
-        message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
-        message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await member.send(embed=message)
+            await ctx.guild.unban(member.user,reason=reason)
+            sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
+            sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            await ctx.send(embed=sunban)
+            message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+            message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await member.send(embed=message)
         else:
             await ctx.send('I couldn\'t find that user.')
     except Exception as e:
