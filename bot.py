@@ -569,14 +569,9 @@ class ActionReason(commands.Converter):
         return ret
 @bot.command(pass_context=True)
 @commands.has_permissions(ban_members=True)
-async def uunban(self, ctx, member: BannedMember, *, reason: ActionReason = None):
-    if reason is None:
-        reason = f'Action done by {ctx.author} (ID: {ctx.author.id})'
-    await ctx.guild.unban(member.user, reason=reason)
-    if member.reason:
-        await ctx.send(f'Unbanned {member.user} (ID: {member.user.id}), previously banned for {member.reason}.')
-    else:
-        await ctx.send(f'Unbanned {member.user} (ID: {member.user.id}).')
+async def uunban(self, ctx, member: BannedMember):
+    await ctx.guild.unban(member.user)
+    await ctx.send(f'Unbanned {member.user} (ID: {member.user.id}).')
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx):
     await ctx.send('hi there i dont know how i make one. I\'ve taken hours just to find how, and I can\'t, soo uh dm Pointless#1278 cause I need help lul. You\'ll be credited after this.')
