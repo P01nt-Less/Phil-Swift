@@ -631,7 +631,8 @@ async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=Non
         return await ctx.send(embed=rchannelmute)
     overwrite = discord.PermissionOverwrite()
     overwrite.send_messages = False
-    await ctx.message.channel.set_permissions(member, overwrite)
+    channeeel = ctx.message.channel
+    await channeeel.set_permissions(member, overwrite)
     schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelmuted {member.mention}\n{reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
