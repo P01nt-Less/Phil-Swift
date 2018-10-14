@@ -577,11 +577,11 @@ async def unban(ctx, member: BannedMember, *, reason: ActionReason = None):
             await ctx.send(embed=skick)
         await ctx.guild.unban(member.user, reason=reason)
         if member.reason:
-            reeason = discord.Embed(title='Unban', description=f'Unbanned {member.user} (ID: {member.user.id}), previously banned for {member.reason}.', color=0x00FF00)
+            reeason = discord.Embed(title='Unban', description=f'Unbanned {member.user} (ID: {member.user.id}), previously banned for {member.reason}, because {reason}', color=0x00FF00)
             reeason.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             await ctx.send(embed=reeason)
         else:
-            reeasson = discord.Embed(title='Unban', description=f'Unbanned {member.user} (ID: {member.user.id}), previously banned without a reason.', color=0x00FF00)
+            reeasson = discord.Embed(title='Unban', description=f'Unbanned {member.user} (ID: {member.user.id}), previously banned without a reason, because {reason}', color=0x00FF00)
             reeasson.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             await ctx.send(embed=reeasson)#
         message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
