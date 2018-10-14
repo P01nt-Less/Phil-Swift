@@ -590,7 +590,7 @@ async def unban(ctx, member: BannedMember, *, reason: ActionReason = None):
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
-async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=None'):
+async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=None):
     '''Ban then unban someone to remove all messages sent by the user within 7 days.\nUsage: !softban <member> [reason]\nAliases: !sban, !sb\nPermissions: Ban Members'''
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -619,7 +619,7 @@ async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=N
 
 @bot.command(pass_context=True, aliases=['cmute', 'channelm', 'cm'])
 @commands.has_permissions(manage_messages=True)
-async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=None'):
+async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=None):
     '''Mute someone in a channel.\nUsage: !channelmute <member> [reason]\nAliases: !cmute, !channelm, !cm\nPermissions: Manage Messages'''
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -641,7 +641,7 @@ async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=Non
 
 @bot.command(pass_context=True, aliases=['cumute', 'channelum', 'cunm', 'chum'])
 @commands.has_permissions(manage_messages=True)
-async def channelunmute(ctx, member : discord.Member, *,  reason : ActionReason=None'):
+async def channelunmute(ctx, member : discord.Member, *,  reason : ActionReason=None):
     '''Unmute someone in a channel.\nUsage: !channelunmute <member> [reason]\nAliases: !cumute,!channelum,!cunm,!chum\nPermissions: Manage Messages'''
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -660,10 +660,10 @@ async def channelunmute(ctx, member : discord.Member, *,  reason : ActionReason=
     message = discord.Embed(title='Channel Mute', description=f'{ctx.message.author.mention} has channelmuted you in {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
-    
+
 @bot.command(pass_context=True)
 @commands.has_permissions(kick_members=True)
-async def warn(ctx, member : discord.Member, *, reason : ActionReason=None'):
+async def warn(ctx, member : discord.Member, *, reason : ActionReason=None):
     '''Warn someone about doing something wrong!\nUsage: !warn <member> [reason]\nAliases: None\nPermissions: Kick Members'''
     if not member:
         mwarn = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
