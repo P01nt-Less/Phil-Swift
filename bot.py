@@ -652,10 +652,10 @@ async def channelunmute(ctx, member : discord.Member, *,  reason : ActionReason=
         rchannelmute = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rchannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=rchannelmute)
-    oveerwrite = discord.PermissionOverwrite()
-    oveerwrite.send_messages = True
-    channeeel = ctx.message.channel
-    await channeeel.set_permissions(member, overwrite=oveerwrite)
+    oveerwritee = discord.PermissionOverwrite()
+    oveerwritee.send_messages = True
+    channeeell = ctx.message.channel
+    await channeeell.set_permissions(member, overwrite=oveerwritee)
     schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelunmuted {member.mention}\n{reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
