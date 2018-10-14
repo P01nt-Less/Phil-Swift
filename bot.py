@@ -512,27 +512,24 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
-# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
-class MemberID(commands.Converter):
-    async def convert(self, ctx, argument):
-        try:
-            m = await commands.MemberConverter().convert(ctx, argument)
-        except commands.BadArgument:
-            try:
-                return int(argument, base=10)
-            except ValueError:
-                raise commands.BadArgument(f"{argument} is not a valid member or member ID.") from None
-        else:
-            can_execute = ctx.author.id == ctx.bot.owner_id or \
-                          ctx.author == ctx.guild.owner or \
-                          ctx.author.top_role > m.top_role
+# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py#L83-L94
+class BannedMember(commands.Converter):
+    async def convert(self, ctx, arg):
+        bans = await ctx.guild.bans()
 
-            if not can_execute:
-                raise commands.BadArgument('You cannot do this action on this user due to role hierarchy.')
-            return m.id
+        try:
+            member_id = int(arg)
+            user = discord.utils.find(lambda u: u.user.id == member_id, bans)
+        except ValueError:
+            user = discord.utils.find(lambda u: str(u.user) == arg, bans)
+
+        if user is None:
+            return None
+
+        return user
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, member: MemberID, *, reason='The unban hammer has spoken!'):
+async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
     if not member:
         munban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -542,13 +539,16 @@ async def unban(ctx, member: MemberID, *, reason='The unban hammer has spoken!')
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
-    await ctx.guild.unban(discord.Object(id=member),reason=reason)
-    sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
-    sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await ctx.send(embed=sunban)
-    message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
-    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await member.send(embed=message)
+    if member is not None:
+        await ctx.guild.unban(member.user,reason=reason)
+        sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
+        sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await ctx.send(embed=sunban)
+        message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+        message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await member.send(embed=message)
+    else:
+        await ctx.send('I couldn\'t find that user.')
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
