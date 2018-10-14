@@ -487,7 +487,10 @@ async def kick(ctx, member : discord.Member=None, *,reason:str=None):
             await ctx.send(e)
     skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await ctx.send(embed=skick)
+    await ctx.send(embed=skick)
+    message = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
 
 
 @bot.command(pass_context=True, aliases=['b'])
@@ -513,7 +516,10 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
             await ctx.send(e)
     skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await ctx.send(embed=skick)
+    await ctx.send(embed=skick)
+    message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
 """
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
@@ -558,7 +564,10 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
             await ctx.send(e)
     skick = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softban {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await ctx.send(embed=skick)
+    await ctx.send(embed=skick)
+    message = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
 
 @bot.command(pass_context=True, aliases=['cmute', 'channelm', 'cm'])
 @commands.has_permissions(manage_messages=True)
@@ -616,6 +625,9 @@ async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer ha
     swarn = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned {member.mention}, because: {reason}', color=0x00FF00)
     swarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=swarn)
+    message = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned you in {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
 
 @bot.command(pass_context=True)
 @commands.has_permissions(manage_messages=True)
