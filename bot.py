@@ -24,6 +24,62 @@ async def on_ready():
     print('Success!')
     await bot.change_presence(activity=discord.Game(name=f'over {len(bot.guilds)} servers | p.help',type=3))
 
+# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
+class BannedMember(commands.Converter):
+    async def convert(self, ctx, arg):
+        bans = await ctx.guild.bans()
+
+        try:
+            member_id = int(arg)
+            user = discord.utils.find(lambda u: u.user.id == member_id, bans)
+        except ValueError:
+            user = discord.utils.find(lambda u: str(u.user) == arg, bans)
+
+        if user is None:
+            return None
+
+        return user
+# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
+class MemberID(commands.Converter):
+    async def convert(self, ctx, argument):
+        try:
+            m = await commands.MemberConverter().convert(ctx, argument)
+        except commands.BadArgument:
+            try:
+                return int(argument, base=10)
+            except ValueError:
+                raise commands.BadArgument(f"{argument} is not a valid member or member ID.") from None
+        else:
+            can_execute = ctx.author.id == ctx.bot.owner_id or \
+                          ctx.author == ctx.guild.owner or \
+                          ctx.author.top_role > m.top_role
+
+            if not can_execute:
+                raise commands.BadArgument('You cannot do this action on this user due to role hierarchy.')
+            return m.id
+# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
+class BannedMember(commands.Converter):
+    async def convert(self, ctx, argument):
+        ban_list = await ctx.guild.bans()
+        try:
+            member_id = int(argument, base=10)
+            entity = discord.utils.find(lambda u: u.user.id == member_id, ban_list)
+        except ValueError:
+            entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
+
+        if entity is None:
+            raise commands.BadArgument("Not a valid previously-banned member.")
+        return entity
+# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
+class ActionReason(commands.Converter):
+    async def convert(self, ctx, argument):
+        ret = f'{ctx.author} (ID: {ctx.author.id}): {argument}'
+
+        if len(ret) > 512:
+            reason_max = 512 - len(ret) - len(argument)
+            raise commands.BadArgument(f'reason is too long ({len(argument)}/{reason_max})')
+        return ret
+
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
     '''Get a list of commands.\n`commands` `cmds` `h`'''
@@ -512,76 +568,25 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
-# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py#L83-L94
-class BannedMember(commands.Converter):
-    async def convert(self, ctx, arg):
-        bans = await ctx.guild.bans()
-
-        try:
-            member_id = int(arg)
-            user = discord.utils.find(lambda u: u.user.id == member_id, bans)
-        except ValueError:
-            user = discord.utils.find(lambda u: str(u.user) == arg, bans)
-
-        if user is None:
-            return None
-
-        return user
-
-class MemberID(commands.Converter):
-    async def convert(self, ctx, argument):
-        try:
-            m = await commands.MemberConverter().convert(ctx, argument)
-        except commands.BadArgument:
-            try:
-                return int(argument, base=10)
-            except ValueError:
-                raise commands.BadArgument(f"{argument} is not a valid member or member ID.") from None
-        else:
-            can_execute = ctx.author.id == ctx.bot.owner_id or \
-                          ctx.author == ctx.guild.owner or \
-                          ctx.author.top_role > m.top_role
-
-            if not can_execute:
-                raise commands.BadArgument('You cannot do this action on this user due to role hierarchy.')
-            return m.id
-
-class BannedMember(commands.Converter):
-    async def convert(self, ctx, argument):
-        ban_list = await ctx.guild.bans()
-        try:
-            member_id = int(argument, base=10)
-            entity = discord.utils.find(lambda u: u.user.id == member_id, ban_list)
-        except ValueError:
-            entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
-
-        if entity is None:
-            raise commands.BadArgument("Not a valid previously-banned member.")
-        return entity
-
-class ActionReason(commands.Converter):
-    async def convert(self, ctx, argument):
-        ret = f'{ctx.author} (ID: {ctx.author.id}): {argument}'
-
-        if len(ret) > 512:
-            reason_max = 512 - len(ret) - len(argument)
-            raise commands.BadArgument(f'reason is too long ({len(argument)}/{reason_max})')
-        return ret
-
 @bot.command(pass_context=True)
 @commands.has_permissions(ban_members=True)
-async def uunban(ctx, member: BannedMember, *, reason: ActionReason = None):
+async def unban(ctx, member: BannedMember, *, reason: ActionReason = None):
         if reason is None:
-            reason = f'Action done by {ctx.author} (ID: {ctx.author.id})'
-
+            skick = discord.Embed(title='Error', description=f'Specify a reason!', color=0x00FF00)
+            skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            await ctx.send(embed=skick)
         await ctx.guild.unban(member.user, reason=reason)
         if member.reason:
-            await ctx.send(f'Unbanned {member.user} (ID: {member.user.id}), previously banned for {member.reason}.')
+            reeason = discord.Embed(title='Unban', description=f'Unbanned {member.user} (ID: {member.user.id}), previously banned for {member.reason}.', color=0x00FF00)
+            reeason.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            await ctx.send(embed=reeason)
         else:
-            await ctx.send(f'Unbanned {member.user} (ID: {member.user.id}).')
-@bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx):
-    await ctx.send('hi there i dont know how i make one. I\'ve taken hours just to find how, and I can\'t, soo uh dm Pointless#1278 cause I need help lul. You\'ll be credited after this.')
+            reeasson = discord.Embed(title='Unban', description=f'Unbanned {member.user} (ID: {member.user.id}), previously banned without a reason.', color=0x00FF00)
+            reeasson.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            await ctx.send(embed=reeasson)#
+        message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+        message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await member.send(embed=message)
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
