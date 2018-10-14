@@ -420,7 +420,7 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=egiverole)
         else:
-            ctx.send(e)
+            await ctx.send(e)
 
 
 @bot.command(pass_context=True, aliases=['tr'])
@@ -451,7 +451,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=egiverole)
         else:
-            ctx.send(e)
+            await ctx.send(e)
 
 '''
 '##::::'##::'#######::'########::'########:'########:::::'###::::'########:'####::'#######::'##::: ##:
