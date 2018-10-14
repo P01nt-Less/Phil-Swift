@@ -439,19 +439,12 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
         ntakerole = discord.Embed(title='Error', description='That isn\'t a role!', color=0xFF0000)
         ntakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=ntakerole)
-    try:
-        rolev = discord.utils.get(ctx.guild.roles, name=role)
-        await member.remove_roles(rolev)
-        stakerole = discord.Embed(title='Takerole', description=f'{ctx.message.author.mention} has taken the role, {role}, from {member.name}!', color=0x00FF00)
-        stakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await ctx.send(embed=stakerole)
-    except Exception as e:
-        if 'Privilege is too low' in str(e):
-            egiverole = discord.Embed(title='Error', description=f'The person you are trying to take a role from has high permissions.', color=0xFF0000)
-            egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await ctx.send(embed=egiverole)
-        else:
-            await ctx.send(e)
+    rolev = discord.utils.get(ctx.guild.roles, name=role)
+    await member.remove_roles(rolev)
+    stakerole = discord.Embed(title='Takerole', description=f'{ctx.message.author.mention} has taken the role, {role}, from {member.name}!', color=0x00FF00)
+    stakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await ctx.send(embed=stakerole)
+
 
 '''
 '##::::'##::'#######::'########::'########:'########:::::'###::::'########:'####::'#######::'##::: ##:
