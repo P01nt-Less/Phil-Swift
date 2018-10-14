@@ -536,7 +536,7 @@ async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoke
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
     try:
-            await ctx.guild.unban(member.user,reason=reason)
+            await ctx.guild.unban(member.id,reason=reason)
             sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
             sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             await ctx.send(embed=sunban)
