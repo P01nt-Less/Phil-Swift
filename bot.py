@@ -531,10 +531,6 @@ class BannedMember(commands.Converter):
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
-    if not member:
-        munban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
-        munban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=munban)
     if not reason:
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -547,6 +543,8 @@ async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoke
             message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
             message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await member.send(embed=message)
+        else:
+            await ctx.send('I couldn\'t find that user.')
     except Exception as e:
         await ctx.send(e)
 
