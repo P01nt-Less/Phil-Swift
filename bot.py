@@ -513,7 +513,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     return await member.send(embed=message)
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
+async def unban(ctx, member : discord.Member.id=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
     if not member:
         munban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -523,7 +523,7 @@ async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
-    await ctx.guild.unban(discord.Object(id=member),reason=reason)
+    await ctx.guild.unban(member),reason=reason)
     sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
     sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
