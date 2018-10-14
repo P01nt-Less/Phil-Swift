@@ -420,7 +420,7 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=egiverole)
         else:
-            ctx.send('```py\n' + e + '```')
+            ctx.send(e)
 
 
 @bot.command(pass_context=True, aliases=['tr'])
@@ -451,7 +451,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=egiverole)
         else:
-            ctx.send('```py\n' + e + '```')
+            ctx.send(e)
 
 '''
 '##::::'##::'#######::'########::'########:'########:::::'###::::'########:'####::'#######::'##::: ##:
@@ -484,7 +484,7 @@ async def kick(ctx, member : discord.Member=None, *,reason:str=None):
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ekick)
         else:
-            await ctx.send('```py\n' + e + '```')
+            await ctx.send(e)
     skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
@@ -513,7 +513,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ekick)
         else:
-            await ctx.send('```py\n' + e + '```')
+            await ctx.send(e)
     skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
@@ -561,7 +561,7 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ekick)
         else:
-            await ctx.send('```py\n' + e + '```')
+            await ctx.send(e)
     skick = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softban {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
