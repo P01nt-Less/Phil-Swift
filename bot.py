@@ -514,21 +514,24 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
 
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, member: int=None, *, reason='The unban hammer has spoken!'):
+async def unban(ctx, user: int=None, *reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermission: Ban Members'''
     if not reason:
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
     try:
-            member = discord.Member(id=member)
-            await ctx.guild.unban(member,reason=reason)
-            sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
-            sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            await ctx.send(embed=sunban)
-            message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
-            message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await member.send(embed=message)
+            user = discord.User(id=user)
+            if user is not None:
+                await ctx.guild.unban(user,reason=reason)
+                sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
+                sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+                await ctx.send(embed=sunban)
+                message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+                message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+                return await member.send(embed=message)
+            else:
+                pass
     except Exception as e:
         await ctx.send(e)
 
