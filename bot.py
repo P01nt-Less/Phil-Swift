@@ -409,8 +409,8 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
         nogiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=nogiverole)
     try:
-        discord.utils.get(ctx.message.guild.roles, name=role)
-        await bot.add_roles(member, role)
+        rolev = discord.utils.get(ctx.guild.roles, name=role)
+        await member.add_roles(rolev)
         sgiverole = discord.Embed(title='Giverole', description=f'{ctx.message.author.mention} has given the role, {role}, to {member.name}!', color=0x00FF00)
         sgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await ctx.send(embed=sgiverole)
@@ -440,7 +440,8 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
         ntakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=ntakerole)
     try:
-        await bot.remove_roles(member, role)
+        rolev = discord.utils.get(ctx.guild.roles, name=role)
+        await member.remove_roles(rolev)
         stakerole = discord.Embed(title='Takerole', description=f'{ctx.message.author.mention} has taken the role, {role}, from {member.name}!', color=0x00FF00)
         stakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await ctx.send(embed=stakerole)
@@ -450,8 +451,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=egiverole)
         else:
-            pass
-
+            ctx.send('```py\n' + e + '```')
 
 '''
 '##::::'##::'#######::'########::'########:'########:::::'###::::'########:'####::'#######::'##::: ##:
@@ -484,7 +484,7 @@ async def kick(ctx, member : discord.Member=None, *,reason:str=None):
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ekick)
         else:
-            await ctx.send(e)
+            await ctx.send('```py\n' + e + '```')
     skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
@@ -513,7 +513,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ekick)
         else:
-            await ctx.send(e)
+            await ctx.send('```py\n' + e + '```')
     skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
@@ -561,7 +561,7 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
             ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=ekick)
         else:
-            await ctx.send(e)
+            await ctx.send('```py\n' + e + '```')
     skick = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softban {member.name}, because: {reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
