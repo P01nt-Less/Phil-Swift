@@ -520,11 +520,10 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
-"""
+
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
-    await ctx.send('If you know how to make a working unban command that can unban people who are not in this server, using at least IDs, but usernames more preferable, in Python, please contact Pointless#1278 and you will be credited and your name will be placed onto the footer of the !unban command\'s embed! This will help me, you and everyone else who uses the bot.')
     if not member:
         munban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
         munban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -533,7 +532,7 @@ async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
-    bot.unban(server, bot.get_user_info(member)
+    await ctx.guild.unban(discord.Object(id=member),reason=reason)
     success = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
     success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
