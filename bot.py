@@ -569,7 +569,7 @@ class ActionReason(commands.Converter):
         return ret
 @bot.command(pass_context=True)
 @commands.has_permissions(ban_members=True)
-async def unban(self, ctx, member: BannedMember, *, reason: ActionReason = None):
+async def uunban(self, ctx, member: BannedMember, *, reason: ActionReason = None):
     if reason is None:
         reason = f'Action done by {ctx.author} (ID: {ctx.author.id})'
     await ctx.guild.unban(member.user, reason=reason)
