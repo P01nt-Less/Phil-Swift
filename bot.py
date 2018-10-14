@@ -530,13 +530,7 @@ class BannedMember(commands.Converter):
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx):
-    '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermission: Ban Members'''
-    unbanned = ctx.message.content.replace('p.unban ', '')
-    bans = list(ctx.message.guild.bans())
-    for banned in bans:
-        if unbanned.lower() in banned.name.lower():
-            await banned.unban()
-            return await ctx.send(f'{banned} unbanned.')
+    await ctx.send('hi there i dont know how i make one. I\'ve taken hours just to find how, and I can\'t, soo uh dm Pointless#1278 cause I need help lul. You\'ll be credited after this.'')
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
