@@ -514,7 +514,7 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
 
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, user: int=None, *reason='The unban hammer has spoken!'):
+async def unban(ctx, user: int=None, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermission: Ban Members'''
     if not reason:
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
