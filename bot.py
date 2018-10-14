@@ -425,7 +425,7 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
 
 @bot.command(pass_context=True, aliases=['tr'])
 @commands.has_permissions(manage_roles=True)
-async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
+async def takerole(ctx, member: discord.Member.id, *, role: discord.Role=None):
     '''Take a role away from someone\nUsage: !takerole <member> <role>\nAliases: !tr\nPermissions: Manage Roles'''
     if not member:
         mtakerole = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
