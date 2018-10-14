@@ -579,7 +579,7 @@ async def uunban(self, ctx, member: BannedMember, *, reason: ActionReason = None
         await ctx.send(f'Unbanned {member.user} (ID: {member.user.id}).')
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx):
-    await ctx.send('hi there i dont know how i make one. I\'ve taken hours just to find how, and I can\'t, soo uh dm Pointless#1278 cause I need help lul. You\'ll be credited after this.'')
+    await ctx.send('hi there i dont know how i make one. I\'ve taken hours just to find how, and I can\'t, soo uh dm Pointless#1278 cause I need help lul. You\'ll be credited after this.')
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
