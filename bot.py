@@ -536,8 +536,9 @@ async def unban(ctx, member:str=None, *, reason='The unban hammer has spoken!'):
     success = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
     success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
-    return await ctx.channel.send(member, f'You have been unbanned from {ctx.message.guild.name} by {ctx.message.author.mention}, because {reason}', tts=True)
-"""
+    message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
