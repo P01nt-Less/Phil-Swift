@@ -530,7 +530,7 @@ class BannedMember(commands.Converter):
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
 async def unban(ctx, member: BannedMember, *, reason='The unban hammer has spoken!'):
-    '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
+    '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermission: Ban Members'''
     if not reason:
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
