@@ -640,7 +640,7 @@ async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=Non
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
-@bot.command(pass_context=True, aliases=['cumute', 'channelum', 'cunm', 'chum'])
+@bot.command(pass_context=True, aliases=['unchannelmute','cumute', 'channelum', 'cunm', 'chum'])
 @commands.has_permissions(manage_messages=True)
 async def channelunmute(ctx, member : discord.Member, *,  reason : ActionReason=None):
     '''Unmute someone in a channel.\nUsage: !channelunmute <member> [reason]\nAliases: !cumute,!channelum,!cunm,!chum\nPermissions: Manage Messages'''
