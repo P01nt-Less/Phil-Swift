@@ -512,28 +512,31 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
+# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py#L83-L94
+class BannedMember(commands.Converter):
+    async def convert(self, ctx, arg):
+        bans = await ctx.guild.bans()
+
+        try:
+            member_id = int(arg)
+            user = discord.utils.find(lambda u: u.user.id == member_id, bans)
+        except ValueError:
+            user = discord.utils.find(lambda u: str(u.user) == arg, bans)
+
+        if user is None:
+            return None
+
+        return user
 
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, user: int=None, *, reason='The unban hammer has spoken!'):
+async def unban(ctx):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermission: Ban Members'''
-    if not reason:
-        runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
-        runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=runban)
-    try:
-            user = discord.User(id=user)
-            if user is not None:
-                await ctx.guild.unban(user,reason=reason)
-                sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
-                sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-                await ctx.send(embed=sunban)
-                message = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
-                message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-                return await member.send(embed=message)
-            else:
-                pass
-    except Exception as e:
-        await ctx.send(e)
+    unbanned = ctx.message.content.replace('p.unban ', '')
+    bans = list(ctx.message.guild.bans())
+    for banned in bans:
+        if unbanned.lower() in banned.name.lower():
+            await banned.unban()
+            return await ctx.send(f'{banned} unbanned.')
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
