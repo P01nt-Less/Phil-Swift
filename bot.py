@@ -513,7 +513,7 @@ async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
 
 @bot.command(pass_context=True, aliases=['k'])
 @commands.has_permissions(kick_members=True)
-async def kick(ctx, member : discord.Member=None, *,reason:str=None):
+async def kick(ctx, member : discord.Member=None, *, reason : ActionReason=None):
     '''Kick someone.\nUsage: !kick <member> [reason]\nAliases: !k\nPermissions: Kick Members'''
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -532,17 +532,17 @@ async def kick(ctx, member : discord.Member=None, *,reason:str=None):
             return await ctx.send(embed=ekick)
         else:
             await ctx.send(e)
-    skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}, because: {reason}', color=0x00FF00)
+    skick = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked {member.name}\n{reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
-    message = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message = discord.Embed(title='Kick', description=f'{ctx.message.author.mention} has kicked you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
 
 @bot.command(pass_context=True, aliases=['b'])
 @commands.has_permissions(ban_members=True)
-async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has spoken!'):
+async def ban(ctx, member : discord.Member=None, *,  reason : ActionReason=None):
     '''Ban someone\nUsage: !ban <member> [reason]\nAliases: !b\nPermissions: Ban Members'''
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -561,10 +561,10 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
             return await ctx.send(embed=ekick)
         else:
             await ctx.send(e)
-    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}, because: {reason}', color=0x00FF00)
+    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}\n{reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
-    message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
@@ -590,7 +590,7 @@ async def unban(ctx, member: BannedMember, *, reason: ActionReason = None):
 
 @bot.command(pass_context=True, aliases=['sban', 'sb'])
 @commands.has_permissions(ban_members=True)
-async def softban(ctx, member : discord.Member=None, *, reason='The softban hammer has spoken!'):
+async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=None'):
     '''Ban then unban someone to remove all messages sent by the user within 7 days.\nUsage: !softban <member> [reason]\nAliases: !sban, !sb\nPermissions: Ban Members'''
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -610,16 +610,16 @@ async def softban(ctx, member : discord.Member=None, *, reason='The softban hamm
             return await ctx.send(embed=ekick)
         else:
             await ctx.send(e)
-    skick = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softban {member.name}, because: {reason}', color=0x00FF00)
+    skick = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softban {member.name}\n{reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
-    message = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softbanned you from {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softbanned you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
 @bot.command(pass_context=True, aliases=['cmute', 'channelm', 'cm'])
 @commands.has_permissions(manage_messages=True)
-async def channelmute(ctx, member : discord.Member, *, reason : str='The channel mute hammer has spoken!'):
+async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=None'):
     '''Mute someone in a channel.\nUsage: !channelmute <member> [reason]\nAliases: !cmute, !channelm, !cm\nPermissions: Manage Messages'''
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -632,15 +632,16 @@ async def channelmute(ctx, member : discord.Member, *, reason : str='The channel
     overwrite = discord.PermissionOverwrite()
     overwrite.send_messages = False
     await ctx.message.channel.set_permissions(member, overwrite)
-    schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelmuted {member.mention}, because: {reason}', color=0x00FF00)
+    schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelmuted {member.mention}\n{reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
-    await ctx.channel.send(member, f'You have been channelmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
-
+    message = discord.Embed(title='Channel Mute', description=f'{ctx.message.author.mention} has channelmuted you in {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
 
 @bot.command(pass_context=True, aliases=['cumute', 'channelum', 'cunm', 'chum'])
 @commands.has_permissions(manage_messages=True)
-async def channelunmute(ctx, member : discord.Member, *, reason : str='The channel mute hammer has spoken!'):
+async def channelunmute(ctx, member : discord.Member, *,  reason : ActionReason=None'):
     '''Unmute someone in a channel.\nUsage: !channelunmute <member> [reason]\nAliases: !cumute,!channelum,!cunm,!chum\nPermissions: Manage Messages'''
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -652,15 +653,17 @@ async def channelunmute(ctx, member : discord.Member, *, reason : str='The chann
         return await ctx.send(embed=rchannelmute)
     overwrite = discord.PermissionOverwrite()
     overwrite.send_messages = True
-    await bot.edit_channel_permissions(ctx.message.channel, member, overwrite)
-    schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelunmuted {member.mention}, because: {reason}', color=0x00FF00)
+    await ctx.message.channel.set_permissions(member, overwrite)
+    schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelunmuted {member.mention}\n{reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
-    await ctx.channel.send(member, f'You have been channelunmuted in {ctx.message.guild.name} in the {ctx.message.channel.name} channel by {ctx.message.author.mention}, because {reason}', tts=True)
-
+    message = discord.Embed(title='Channel Mute', description=f'{ctx.message.author.mention} has channelmuted you in {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
+    
 @bot.command(pass_context=True)
 @commands.has_permissions(kick_members=True)
-async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer has spoken!'):
+async def warn(ctx, member : discord.Member, *, reason : ActionReason=None'):
     '''Warn someone about doing something wrong!\nUsage: !warn <member> [reason]\nAliases: None\nPermissions: Kick Members'''
     if not member:
         mwarn = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -670,10 +673,10 @@ async def warn(ctx, member : discord.Member, *, reason : str='The warn hammer ha
         rwarn = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         rwarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=rwarn)
-    swarn = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned {member.mention}, because: {reason}', color=0x00FF00)
+    swarn = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned {member.mention}\n{reason}', color=0x00FF00)
     swarn.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=swarn)
-    message = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned you in {ctx.guild.name} because: {reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message = discord.Embed(title='Warn', description=f'{ctx.message.author.mention} has warned you in {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
