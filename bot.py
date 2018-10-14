@@ -512,8 +512,27 @@ async def ban(ctx, member : discord.Member=None, *, reason='The ban hammer has s
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
+# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
+class MemberID(commands.Converter):
+    async def convert(self, ctx, argument):
+        try:
+            m = await commands.MemberConverter().convert(ctx, argument)
+        except commands.BadArgument:
+            try:
+                return int(argument, base=10)
+            except ValueError:
+                raise commands.BadArgument(f"{argument} is not a valid member or member ID.") from None
+        else:
+            can_execute = ctx.author.id == ctx.bot.owner_id or \
+                          ctx.author == ctx.guild.owner or \
+                          ctx.author.top_role > m.top_role
+
+            if not can_execute:
+                raise commands.BadArgument('You cannot do this action on this user due to role hierarchy.')
+            return m.id
+
 @bot.command(pass_context=True, aliases=['ub', 'uban'])
-async def unban(ctx, member : discord.Member.id=None, *, reason='The unban hammer has spoken!'):
+async def unban(ctx, member: MemberID, *, reason='The unban hammer has spoken!'):
     '''Unban someone\nUsage: !unban <member> [reason]\nAliases: !ub, !uban\nPermissions: Ban Members'''
     if not member:
         munban = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -523,8 +542,7 @@ async def unban(ctx, member : discord.Member.id=None, *, reason='The unban hamme
         runban = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
         runban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=runban)
-    get = await ctx.guild.get_member(member)
-    await get.unban(reason=reason)
+    await ctx.guild.unban(discord.Object(id=member),reason=reason)
     sunban = discord.Embed(title='Unban', description=f'{ctx.message.author.mention} has unbanned {member}, because: {reason}', color=0x00FF00)
     sunban.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=sunban)
