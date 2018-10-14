@@ -409,8 +409,7 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
         nogiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=nogiverole)
     try:
-        rolev = discord.utils.get(ctx.guild.roles, name=role)
-        await member.add_roles(rolev)
+        await member.add_roles(role)
         sgiverole = discord.Embed(title='Giverole', description=f'{ctx.message.author.mention} has given the role, {role}, to {member.name}!', color=0x00FF00)
         sgiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await ctx.send(embed=sgiverole)
@@ -425,7 +424,7 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
 
 @bot.command(pass_context=True, aliases=['tr'])
 @commands.has_permissions(manage_roles=True)
-async def takerole(ctx, member: discord.Member.id, *, role: discord.Role=None):
+async def takerole(ctx, member: discord.Member, *, role: discord.Role=None):
     '''Take a role away from someone\nUsage: !takerole <member> <role>\nAliases: !tr\nPermissions: Manage Roles'''
     if not member:
         mtakerole = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -439,8 +438,7 @@ async def takerole(ctx, member: discord.Member.id, *, role: discord.Role=None):
         ntakerole = discord.Embed(title='Error', description='That isn\'t a role!', color=0xFF0000)
         ntakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=ntakerole)
-    rolev = discord.utils.get(ctx.guild.roles, name=role)
-    await member.remove_roles(rolev)
+    await member.remove_roles(role)
     stakerole = discord.Embed(title='Takerole', description=f'{ctx.message.author.mention} has taken the role, {role}, from {member.name}!', color=0x00FF00)
     stakerole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=stakerole)
