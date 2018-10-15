@@ -624,10 +624,6 @@ async def massban(ctx, *, members: MemberID):
         mkick = discord.Embed(title='Error', description='You must specify the members!', color=0xFF0000)
         mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=mkick)
-    if not reason:
-        rkick = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
-        rkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=rkick)
     try:
         for member_id in members:
             await ctx.guild.ban(discord.Object(id=member_id), reason=reason)
@@ -638,10 +634,10 @@ async def massban(ctx, *, members: MemberID):
             return await ctx.send(embed=ekick)
         else:
             await ctx.send(e)
-    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {members.name}\n{reason}', color=0x00FF00)
+    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {members.name}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
-    message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name}.', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
