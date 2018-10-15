@@ -341,7 +341,7 @@ async def server(ctx,ip):
 @minecraft.command(pass_context=True)
 async def player(ctx,usernameuuid):
     rp = requests.get('https://use.gameapis.net/mc/player/profile/' + usernameuuid)
-    rpp = r.json()
+    rpp = rp.json()
     if ip == None:
         ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
         ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
