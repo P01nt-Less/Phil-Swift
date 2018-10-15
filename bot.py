@@ -103,7 +103,7 @@ async def help(ctx,cmd: str=None):
         e.add_field(name='General', value='`help` `ping` `info` `suggest`')
         e.add_field(name='Informational', value='`cryptocurrency` `calculate`')
         e.add_field(name='Fun', value='`coinflip` `8ball` `comic` `dog` `cat`')
-        e.add_field(name='Games', value='`minecraft`')
+        e.add_field(name='Games', value='`minecraft``minecraftpe `gmod`')
         e.add_field(name='Utility', value='`part` `roll` `serverinfo` `userinfo`')
         e.add_field(name='Managing', value='`giverole` `takerole`')
         e.add_field(name='Moderation', value='`kick` `ban` `unban` `softban` `channelmute` `channelunmute` `warn` `purge`')
@@ -298,6 +298,15 @@ async def calchelp(ctx):
     await ctx.send(embed=calchelp3)
     await ctx.send(embed=calchelp4)
 
+'''
+Games Games Games Games Games Games Games Games
+Games Games Games Games Games Games Games Games
+Games Games Games Games Games Games Games Games
+Games Games Games Games Games Games Games Games
+Games Games Games Games Games Games Games Games
+Games Games Games Games Games Games Games Games
+'''
+
 @bot.group(aliases=['mc'])
 async def minecraft(ctx):
     '''Minecraft'''
@@ -356,6 +365,53 @@ async def player(ctx,usernameuuid):
         return await ctx.send(embed=scalculate)
     else:
         icalculate = discord.Embed(title='Error', description='That is an invalid player!', color=0xFF0000)
+        icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=icalculate)
+
+@bot.command(pass_context=True,aliases=['mcpe'])
+async def minecraftpe(ctx,ip):
+    rp = requests.get('https://use.gameapis.net/mcpe/query/info/' + ip)
+    rpp = rp.json()
+    if ip == None:
+        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
+        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=ncalculate)
+    if ip:
+        scalculate = discord.Embed(title=rpp['hostname'], color=0x00FF00)
+        scalculate.add_field(name='Version',value=rpp['version'])
+        scalculate.add_field(name='Protocol',value=rpp['protocol'])
+        scalculate.add_field(name='MOTD',value=rpp['motds']['clean'])
+        scalculate.add_field(name='Players',value=str(rpp['players']['online']) + '/' + str(rpp['players']['max']))
+        scalculate.set_footer(text='Powered by gameapis.net!')
+        scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=scalculate)
+    else:
+        icalculate = discord.Embed(title='Error', description='That is an invalid IP!', color=0xFF0000)
+        icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=icalculate)
+@bot.command(pass_context=True)
+async def gmod(ctx,ip):
+    rp = requests.get('https://use.gameapis.net/gmod/query/info/' + ip)
+    rpp = rp.json()
+    if ip == None:
+        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
+        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=ncalculate)
+    if ip:
+        scalculate = discord.Embed(title=rpp['name'], color=0x00FF00)
+        scalculate.add_field(name='IP',value=rpp['hostname'])
+        scalculate.add_field(name='Map',value=rpp['map'])
+        scalculate.add_field(name='VAC Secured',value=rpp['vac_secured'])
+        scalculate.add_field(name='Password Protected',value=rpp['password_protected'])
+        scalculate.add_field(name='Players',value=str(rpp['players']['online']) + '/' + str(rpp['players']['max']))
+        scalculate.add_field(name='Version',value=rpp['version'])
+        scalculate.add_field(name='Protocol',value=rpp['protocol'])
+        scalculate.add_field(name='Join it',value=rpp['join'])
+        scalculate.set_footer(text='Powered by gameapis.net!')
+        scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=scalculate)
+    else:
+        icalculate = discord.Embed(title='Error', description='That is an invalid IP!', color=0xFF0000)
         icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=icalculate)
 '''
