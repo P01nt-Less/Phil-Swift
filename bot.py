@@ -297,7 +297,7 @@ async def calchelp(ctx):
     await ctx.send(embed=calchelp3)
     await ctx.send(embed=calchelp4)
 
-@bot.command(pass_context=True,aliases=['mc'])
+@bot.group(pass_context=True,aliases=['mc'])
 async def minecraft(ctx):
     '''Minecraft'''
     mc = discord.Embed(title='Minecraft Commands', description='`server` - Find information about a Minecraft server.', color=0xFF0000)
