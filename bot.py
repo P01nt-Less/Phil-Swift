@@ -317,10 +317,13 @@ async def server(ctx,ip):
         if ip:
             scalculate = discord.Embed(title=status.json['hostname'], description='{}'.format(expression), color=0x00FF00)
             scalculate.set_image(url='https://use.gameapis.net/mc/query/banner/' + ip)
+            scalculate.set_thumbnail(url='https://use.gameapis.net/mc/query/icon/' + ip)
             scalculate.add_field(name='Status', value=status.json['status'])
             scalculate.add_field(name='Protocol', value=status.json['protocol'])
             scalculate.add_field(name='Ping', value=status.json['ping'])
             scalculate.add_field(name='Players', value=players.json['players']['online'] + '/' + players.json['players']['max'])
+            scalculate.add_field(name='Version', value=info.json['version'])
+            scalculate.add_field(name='MOTD', value=info.json['motds']['clean'])
             scalculate.set_footer(text='Powered by gameapis.net!')
             scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=scalculate)
