@@ -323,7 +323,7 @@ async def server(ctx,ip):
         scalculate.add_field(name='Status', value=['status'])
         scalculate.add_field(name='Protocol', value=rss['protocol'])
         scalculate.add_field(name='Ping', value=rss['ping'])
-        scalculate.add_field(name='Players', value=rpp['players']['online'] + '/' + rpp['players']['max'])
+        scalculate.add_field(name='Players', value=str(rpp['players']['online']) + '/' + str(rpp['players']['max']))
         scalculate.add_field(name='Version', value=rii['version'])
         scalculate.add_field(name='MOTD', value=rii['motds']['clean'])
         scalculate.set_footer(text='Powered by gameapis.net!')
