@@ -539,7 +539,6 @@ async def kick(ctx, member : discord.Member=None, *, reason : ActionReason=None)
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
-
 @bot.command(pass_context=True, aliases=['b'])
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member=None, *,  reason : ActionReason=None):
@@ -614,6 +613,35 @@ async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=N
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
     message = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softbanned you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    return await member.send(embed=message)
+
+@bot.command(pass_context=True, aliases=['mb'])
+@commands.has_permissions(ban_members=True)
+async def massban(ctx, reason : ActionReason=None, *, members: MemberID):
+    '''Ban someone\nUsage: !ban <member> [reason]\nAliases: !mb\nPermissions: Ban Members'''
+    if not member:
+        mkick = discord.Embed(title='Error', description='You must specify the members!', color=0xFF0000)
+        mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=mkick)
+    if not reason:
+        rkick = discord.Embed(title='Error', description='You must specify a reason!', color=0xFF0000)
+        rkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=rkick)
+    try:
+        for member_id in members:
+            await ctx.guild.ban(discord.Object(id=member_id), reason=reason)
+    except Exception as e:
+        if 'Privilege is too low' in str(e):
+            ekick = discord.Embed(title='Error', description='The person you are trying to ban has high permissions.', color=0xFF0000)
+            ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await ctx.send(embed=ekick)
+        else:
+            await ctx.send(e)
+    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}\n{reason}', color=0x00FF00)
+    skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await ctx.send(embed=skick)
+    message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
