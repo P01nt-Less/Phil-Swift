@@ -103,6 +103,7 @@ async def help(ctx,cmd: str=None):
         e.add_field(name='General', value='`help` `ping` `info` `suggest`')
         e.add_field(name='Informational', value='`cryptocurrency` `calculate`')
         e.add_field(name='Fun', value='`coinflip` `8ball` `comic` `dog` `cat`')
+        e.add_field(name='Games', value='`minecraft`')
         e.add_field(name='Utility', value='`part` `roll` `serverinfo` `userinfo`')
         e.add_field(name='Managing', value='`giverole` `takerole`')
         e.add_field(name='Moderation', value='`kick` `ban` `unban` `softban` `channelmute` `channelunmute` `warn` `purge`')
