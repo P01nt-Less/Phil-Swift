@@ -620,7 +620,7 @@ async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=N
 @commands.has_permissions(ban_members=True)
 async def massban(ctx, *, members: MemberID):
     '''Ban someone\nUsage: !ban <member> [reason]\nAliases: !mb\nPermissions: Ban Members'''
-    if not member:
+    if not members:
         mkick = discord.Embed(title='Error', description='You must specify the members!', color=0xFF0000)
         mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=mkick)
