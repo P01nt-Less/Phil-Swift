@@ -11,6 +11,7 @@ import os
 import yarl
 import io
 import datetime
+import ast
 import textwrap
 import time
 import aiohttp
@@ -39,7 +40,6 @@ class BannedMember(commands.Converter):
             return None
 
         return user
-# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
 class MemberID(commands.Converter):
     async def convert(self, ctx, argument):
         try:
@@ -57,7 +57,6 @@ class MemberID(commands.Converter):
             if not can_execute:
                 raise commands.BadArgument('You cannot do this action on this user due to role hierarchy.')
             return m.id
-# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
 class BannedMember(commands.Converter):
     async def convert(self, ctx, argument):
         ban_list = await ctx.guild.bans()
@@ -70,7 +69,7 @@ class BannedMember(commands.Converter):
         if entity is None:
             raise commands.BadArgument("Not a valid previously-banned member.")
         return entity
-# Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
+
 class ActionReason(commands.Converter):
     async def convert(self, ctx, argument):
         ret = f'{ctx.author} (ID: {ctx.author.id}): {argument}'
@@ -79,6 +78,22 @@ class ActionReason(commands.Converter):
             reason_max = 512 - len(ret) - len(argument)
             raise commands.BadArgument(f'reason is too long ({len(argument)}/{reason_max})')
         return ret
+
+
+def insert_returns(body):
+    # insert return stmt if the last expression is a expression statement
+    if isinstance(body[-1], ast.Expr):
+        body[-1] = ast.Return(body[-1].value)
+        ast.fix_missing_locations(body[-1])
+
+    # for if statements, we insert returns into the body and the orelse
+    if isinstance(body[-1], ast.If):
+        insert_returns(body[-1].body)
+        insert_returns(body[-1].orelse)
+
+    # for with blocks, again we insert returns into the body
+    if isinstance(body[-1], ast.With):
+        insert_returns(body[-1].body)
 
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
@@ -125,6 +140,57 @@ async def restart(ctx):
         embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=embed)
 
+
+@bot.command(pass_context=True)
+async def eval(ctx, *, cmd):
+    """Evaluates input.
+    Input is interpreted as newline seperated statements.
+    If the last statement is an expression, that is the return value.
+    Usable globals:
+      - `bot`: the bot instance
+      - `discord`: the discord module
+      - `commands`: the discord.ext.commands module
+      - `ctx`: the invokation context
+      - `__import__`: the builtin `__import__` function
+    Such that `p.eval 1 + 1` gives `2` as the result.
+    The following invokation will cause the bot to send the text '9'
+    to the channel of invokation and return '3' as the result of evaluating
+    >eval ```
+    a = 1 + 2
+    b = a * 2
+    await ctx.send(a + b)
+    a
+    ```
+    """
+    if ctx.message.author.id == 276043503514025984:
+        fn_name = "_eval_expr"
+
+        cmd = cmd.strip("` ")
+
+        # add a layer of indentation
+        cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
+
+        # wrap in async def body
+        body = f"async def {fn_name}():\n{cmd}"
+
+        parsed = ast.parse(body)
+        body = parsed.body[0].body
+
+        insert_returns(body)
+
+        env = {
+            'bot': ctx.bot,
+            'discord': discord,
+            'commands': commands,
+            'ctx': ctx,
+            '__import__': __import__
+        }
+        exec(compile(parsed, filename="<ast>", mode="exec"), env)
+
+        result = (await eval(f"{fn_name}()", env))
+        await ctx.send(result)
+    else:
+        ctx.send('You\'re not our lord and saviour, Pointless#1278.')
 
 '''
 :'######:::'########:'##::: ##:'########:'########:::::'###::::'##:::::::
@@ -613,31 +679,6 @@ async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=N
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
     message = discord.Embed(title='Softban', description=f'{ctx.message.author.mention} has softbanned you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
-    message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    return await member.send(embed=message)
-
-@bot.command(pass_context=True, aliases=['mb'])
-@commands.has_permissions(ban_members=True)
-async def massban(ctx, *, members: MemberID):
-    '''Ban someone\nUsage: !ban <member> [reason]\nAliases: !mb\nPermissions: Ban Members'''
-    if not members:
-        mkick = discord.Embed(title='Error', description='You must specify the members!', color=0xFF0000)
-        mkick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=mkick)
-    try:
-        for member_id in members:
-            await ctx.guild.ban(discord.Object(id=member_id), reason=reason)
-    except Exception as e:
-        if 'Privilege is too low' in str(e):
-            ekick = discord.Embed(title='Error', description='The person you are trying to ban has high permissions.', color=0xFF0000)
-            ekick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-            return await ctx.send(embed=ekick)
-        else:
-            await ctx.send(e)
-    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {members.name}', color=0x00FF00)
-    skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    await ctx.send(embed=skick)
-    message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name}.', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
