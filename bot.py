@@ -618,7 +618,7 @@ async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=N
 
 @bot.command(pass_context=True, aliases=['mb'])
 @commands.has_permissions(ban_members=True)
-async def massban(ctx, reason : ActionReason=None, *, members: MemberID):
+async def massban(ctx, *, members: MemberID):
     '''Ban someone\nUsage: !ban <member> [reason]\nAliases: !mb\nPermissions: Ban Members'''
     if not member:
         mkick = discord.Embed(title='Error', description='You must specify the members!', color=0xFF0000)
@@ -638,7 +638,7 @@ async def massban(ctx, reason : ActionReason=None, *, members: MemberID):
             return await ctx.send(embed=ekick)
         else:
             await ctx.send(e)
-    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {member.name}\n{reason}', color=0x00FF00)
+    skick = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned {members.name}\n{reason}', color=0x00FF00)
     skick.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=skick)
     message = discord.Embed(title='Ban', description=f'{ctx.message.author.mention} has banned you from {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
