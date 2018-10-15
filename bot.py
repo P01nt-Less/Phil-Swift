@@ -342,11 +342,11 @@ async def server(ctx,ip):
 async def player(ctx,usernameuuid):
     rp = requests.get('https://use.gameapis.net/mc/player/profile/' + usernameuuid)
     rpp = rp.json()
-    if ip == None:
-        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
+    if usernameuuid == None:
+        ncalculate = discord.Embed(title='Error', description='Specify the Username/UUID!', color=0xFF0000)
         ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=ncalculate)
-    if ip:
+    if usernameuuid:
         scalculate = discord.Embed(title=rpp['name'], color=0x00FF00)
         scalculate.set_image(url='https://use.gameapis.net/mc/images/rawskin' + usernameuuid)
         scalculate.set_thumbnail(url='https://use.gameapis.net/mc/images/skin' + usernameuuid)
