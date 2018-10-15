@@ -320,7 +320,7 @@ async def server(ctx,ip):
         scalculate = discord.Embed(title=rss['hostname'], color=0x00FF00)
         scalculate.set_image(url='https://use.gameapis.net/mc/query/banner/' + ip)
         scalculate.set_thumbnail(url='https://use.gameapis.net/mc/query/icon/' + ip)
-        scalculate.add_field(name='Status', value=['status'])
+        scalculate.add_field(name='Status', value=rss['status'])
         scalculate.add_field(name='Protocol', value=rss['protocol'])
         scalculate.add_field(name='Ping', value=rss['ping'])
         scalculate.add_field(name='Players', value=str(rpp['players']['online']) + '/' + str(rpp['players']['max']))
