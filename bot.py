@@ -301,11 +301,11 @@ async def calchelp(ctx):
 async def minecraft(ctx):
     '''Minecraft'''
     if ctx.invoked_subcommand is None:
-        pass
-    else:
         mc = discord.Embed(title='Minecraft Commands', description='`server` - Find information about a Minecraft server.', color=0x00FF00)
         mc.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=mc)
+    else:
+        pass
 
 @minecraft.command(pass_context=True)
 async def server(ctx,ip):
