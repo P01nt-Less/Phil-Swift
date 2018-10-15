@@ -338,6 +338,26 @@ async def server(ctx,ip):
         icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=icalculate)
 
+@minecraft.command(pass_context=True)
+async def player(ctx,usernameuuid):
+    rp = requests.get('https://use.gameapis.net/mc/player/profile/' + usernameuuid)
+    rpp = r.json()
+    if ip == None:
+        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
+        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=ncalculate)
+    if ip:
+        scalculate = discord.Embed(title=rpp['name'], color=0x00FF00)
+        scalculate.set_image(url='https://use.gameapis.net/mc/images/rawskin' + usernameuuid)
+        scalculate.set_thumbnail(url='https://use.gameapis.net/mc/images/skin' + usernameuuid)
+        scalculate.add_field(name='UUID', value=rpp['uuid_formatted'])
+        scalculate.set_footer(text='Powered by gameapis.net!')
+        scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=scalculate)
+    else:
+        icalculate = discord.Embed(title='Error', description='That is an invalid player!', color=0xFF0000)
+        icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=icalculate)
 '''
 '########:'##::::'##:'##::: ##:
  ##.....:: ##:::: ##: ###:: ##:
