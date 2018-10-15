@@ -301,8 +301,10 @@ async def calchelp(ctx):
 @bot.group(aliases=['mc'])
 async def minecraft(ctx):
     '''Minecraft'''
+    r = requests.get('https://use.gameapis.net/mc/extra/status/')
+    rr = r.json()
     if ctx.invoked_subcommand is None:
-        mc = discord.Embed(title='Minecraft Commands', description='`server` - Find information about a Minecraft server.', color=0x00FF00)
+        mc = discord.Embed(title='Minecraft Commands', description='`server` - Find information about a Minecraft server.\n`player` - Find information about a minecraft player using UUID or username.', color=0x00FF00)
         mc.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=mc)
     else:
