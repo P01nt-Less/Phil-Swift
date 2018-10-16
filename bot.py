@@ -298,31 +298,6 @@ async def calchelp(ctx):
     await ctx.send(embed=calchelp3)
     await ctx.send(embed=calchelp4)
 
-
-
-@bot.command(pass_context=True)
-async def virustotal(ctx, url):
-    '''Find out cryptocurrency rates.\n`cc`'''
-    url = url.lower()
-    p = {'apikey': os.environ.get('VIRUSTOTAL'), 'resource':url}
-    r = requests.post('https://www.virustotal.com/vtapi/v2/url/report',params=p)
-    if url == None:
-        ncryptocurrency = discord.Embed(title='Error', description='Specify the cryptocurrency symbol, not cryptocurreny name!', color=0xFF0000)
-        ncryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ncryptocurrency)
-    if url:
-        scryptocurrency = discord.Embed(title='Virus Total Scan', description=url, color=0x00FF00)
-        scryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        scryptocurrency.add_field(name='Link', value=r.json['permalink'])
-        scryptocurrency.add_field(name='URL Entered', value=r.json['url'])
-        scryptocurrency.add_field(name='Positives', value=r.json['positives'])
-        scryptocurrency.add_field(name='Scans', value='CleanMX' + r.json['scans']['CLEAN MX']['results'])
-        scryptocurrency.set_footer(text='Cryptocurrency information by https://cryptocompare.com/!')
-        return await ctx.send(embed=scryptocurrency)
-    else:
-        rcryptocurrency = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
-        rcryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=rcryptocurrency)
 '''
 Games Games Games Games Games Games Games Games
 Games Games Games Games Games Games Games Games
