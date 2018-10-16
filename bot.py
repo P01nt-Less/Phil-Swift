@@ -300,7 +300,7 @@ async def calchelp(ctx):
 
 
 
-@bot.command(pass_context=True, aliases=['cc'])
+@bot.command(pass_context=True)
 async def virustotal(ctx, url):
     '''Find out cryptocurrency rates.\n`cc`'''
     url = url.lower()
