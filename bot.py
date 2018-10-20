@@ -550,7 +550,7 @@ async def serverinfo(ctx):
     await ctx.send(embed=sserverinfo)
 
 @bot.command(pass_context=True,aliases=['ui'])
-async def userinfo(ctx, user:discord.Member = None):
+async def userinfo(ctx, user:discord.User = ctx.message.author):
     '''See information about a user!\n`ui`'''
     if user is None:
         user = ctx.message.author
