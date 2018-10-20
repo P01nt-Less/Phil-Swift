@@ -556,7 +556,7 @@ async def userinfo(ctx, user:discord.Member = None):
     if user is None:
         user = ctx.message.author
     suserinfo = discord.Embed(title = (str(user.displayname)),colour=0x00FF00)
-    suserinfo.set_thumbnail(url = user.avatar_url)
+    suserinfo.set_thumbnail(url = user.avatar_url_as(static_format='png',size=1024))
     suserinfo.add_field(name ='Joined at', value=str(user.joined_at.strftime("%A, %B %d %Y @ %H:%M:%S %p")))
     suserinfo.add_field(name ='Game Playing',value=str(user.activity.name))
     suserinfo.add_field(name ='Status',value=str(user.status))
