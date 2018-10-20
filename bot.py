@@ -551,14 +551,12 @@ async def serverinfo(ctx):
     await ctx.send(embed=sserverinfo)
 
 @bot.command(pass_context=True,aliases=['ui'])
-async def userinfo(ctx, user:discord.User = None):
+async def userinfo(ctx, user:discord.Member = None):
     '''See information about a user!\n`ui`'''
     if user is None:
         user = ctx.message.author
-    suserinfo = discord.Embed(title = (str(user.name)),colour=0x00FF00)
+    suserinfo = discord.Embed(title = (str(user.nick)),colour=0x00FF00)
     suserinfo.set_thumbnail(url = user.avatar_url)
-    suserinfo.add_field(name ='ID', value=str(user.id))
-    suserinfo.add_field(name ='Nickname', value=str(user.nick))
     suserinfo.add_field(name ='Joined at', value=str(user.joined_at.strftime("%A, %B %d %Y @ %H:%M:%S %p")))
     suserinfo.add_field(name ='Game Playing',value=str(user.activity.name))
     suserinfo.add_field(name ='Status',value=str(user.status))
