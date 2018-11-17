@@ -321,6 +321,10 @@ async def minecraft(ctx):
 
 @minecraft.command(pass_context=True)
 async def server(ctx,ip):
+    if ctx.invoked_subcommand is None:
+        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
+        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=ncalculate)
     rs = requests.get('https://use.gameapis.net/mc/query/status/' + ip)
     rss = rs.json()
     rp = requests.get('https://use.gameapis.net/mc/query/players/' + ip)
