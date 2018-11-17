@@ -26,6 +26,52 @@ async def on_ready():
     print('Success!')
     await bot.change_presence(activity=discord.Game(name=f'over {len(bot.guilds)} servers | p.help',type=3))
 
+async def on_command_error(message,  error):
+    if isinstance(error, commands.CommandNotFound):
+        embed = discord.Embed(title='Error', description=f'That command doesn\'t exist!\n```' + error + '```', color=0xFF0000)
+        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embed)
+        print(error)
+    if isinstance(error, commands.CommandOnCooldown):
+        embedd = discord.Embed(title='Error', description=f'You\'re still on cooldown.\n```' + error + '```', color=0xFF0000)
+        embedd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embedd)
+        print(error)
+    if isinstance (error, commands.MissingPermissions):
+        embeddd = discord.Embed(title='Error', description=f'You don\'t have the permissions for that.\n```' + error + '```', color=0xFF0000)
+        embeddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embeddd)
+        print(error)
+    if isinstance(error, commands.MissingRequiredArgument):
+        embedddd = discord.Embed(title='Error', description=f'You didn\'t use the command correctly. Try p.help.\n```' + error + '```', color=0xFF0000)
+        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embedddd)
+        print(error)
+    if isinstance(error, commands.NoPrivateMessage):
+        embedddd = discord.Embed(title='Error', description=f'This command cannot be executed in private messages.\n```' + error + '```', color=0xFF0000)
+        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embedddd)
+        print(error)
+    if isinstance(error, commands.TooManyArguments):
+        embedddd = discord.Embed(title='Error', description=f'You didn\'t use the command correctly. Try p.help.\n```' + error + '```', color=0xFF0000)
+        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embedddd)
+        print(error)
+    if isinstance(error, commands.NotOwner):
+        embedddd = discord.Embed(title='Error', description=f'You\'re not our lord and mighty saviour, Phil Swift.\n```' + error + '```', color=0xFF0000)
+        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embedddd)
+        print(error)
+    if isinstance(error, commands.BotMissingPermissions):
+        embedddd = discord.Embed(title='Error', description=f'I don\'t have enough permissions.\n```' + error + '```', color=0xFF0000)
+        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await discord.abc.Messageable.send(message.channel, embed=embedddd)
+        print(error)
+    else:
+        print(error)
+
+
+
 # Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
 class BannedMember(commands.Converter):
     async def convert(self, ctx, arg):
