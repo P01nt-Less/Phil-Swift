@@ -26,6 +26,39 @@ async def on_ready():
     print('Success!')
     await bot.change_presence(activity=discord.Game(name=f'over {len(bot.guilds)} servers | p.help',type=3))
 
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+    await bot.process_commands(message)
+
+@bot.event
+async def on_guild_join(guild):
+    get = bot.get_channel(513297881428525056)
+    embed=discord.Embed(title=f'{guild.name}',description='I joined a new server!',color=0x00FF00)
+    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    embed.add_field(name="Members", value=len(guild.members))
+    embed.add_field(name="Owner", value=guild.owner)
+    embed.set_thumbnail(url=guild.icon_url)
+    embed.set_footer(text=f"ID: {guild.id}")
+    await get.send(embed=embed)
+    try:
+        hi=discord.Embed(title='Hello!',description='I am Phil Swift, a bot created by a Flex Fan.\n My prefix is p.\nThe help command is p.help\nThank you for inviting me to your server!',color=0x00FF00)
+        hi.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        await guild.channels[0].send(embed=hi)
+    except discord.Forbidden:
+        pass
+@bot.event
+async def on_guild_leave(guild):
+    get = bot.get_channel(513297881428525056)
+    embed=discord.Embed(title=f'{guild.name}',description='I left a server!',color=0xFF0000)
+    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    embed.add_field(name="Members", value=len(guild.members))
+    embed.add_field(name="Owner", value=guild.owner)
+    embed.set_thumbnail(url=guild.icon_url)
+    embed.set_footer(text=f"ID: {guild.id}")
+    await get.send(embed=embed)
+
 async def on_command_error(message,  error):
     if isinstance(error, commands.CommandNotFound):
         embed = discord.Embed(title='Error', description=f'That command doesn\'t exist!\n```' + error + '```', color=0xFF0000)
