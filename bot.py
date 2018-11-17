@@ -49,7 +49,7 @@ async def on_guild_join(guild,ctx):
     except discord.Forbidden:
         pass
 @bot.event
-async def on_guild_leave(guild,ctx):
+async def on_guild_leave(guild) -> ctx:
     get = bot.get_channel(513297881428525056)
     embed=discord.Embed(title=f'{guild.name}',description='I left a server!',color=0xFF0000)
     embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
