@@ -36,7 +36,7 @@ async def on_message(message):
 async def on_guild_join(guild):
     get = bot.get_channel(513297881428525056)
     embed=discord.Embed(title=f'{discord.Guild.name}',description='I joined a server!',color=0x00FF00)
-    embed.set_author(name=f'{discord.Message.author.display_name}', icon_url=f'{discord.Message.author.avatar_url}')
+    embed.set_author(name=f'{discord.Message.author.nick}', icon_url=f'{discord.Message.author.avatar_url}')
     embed.add_field(name="Members", value=len(discord.Guild.members))
     embed.add_field(name="Owner", value=discord.Guild.owner)
     embed.set_thumbnail(url=discord.Guild.icon_url)
