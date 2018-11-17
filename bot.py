@@ -33,14 +33,14 @@ async def on_message(message):
     await bot.process_commands(message)
 
 @bot.event
-async def on_guild_join(guild,ctx):
+async def on_guild_join(guild):
     get = bot.get_channel(513297881428525056)
-    embed=discord.Embed(title=f'{guild.name}',description='I joined a new server!',color=0x00FF00)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    embed.add_field(name="Members", value=len(guild.members))
-    embed.add_field(name="Owner", value=guild.owner)
-    embed.set_thumbnail(url=guild.icon_url)
-    embed.set_footer(text=f"ID: {guild.id}")
+    embed=discord.Embed(title=f'{discord.Guild.name}',description='I joined a server!',color=0x00FF00)
+    embed.set_author(name=f'{discord.Message.author.display_name}', icon_url=f'{discord.Message.author.avatar_url}')
+    embed.add_field(name="Members", value=len(discord.Guild.members))
+    embed.add_field(name="Owner", value=discord.Guild.owner)
+    embed.set_thumbnail(url=discord.Guild.icon_url)
+    embed.set_footer(text=f"ID: {discord.Guild.id}")
     await get.send(embed=embed)
     try:
         hi=discord.Embed(title='Hello!',description='I am Phil Swift, a bot created by a Flex Fan.\n My prefix is p.\nThe help command is p.help\nThank you for inviting me to your server!',color=0x00FF00)
@@ -49,15 +49,15 @@ async def on_guild_join(guild,ctx):
     except discord.Forbidden:
         pass
 @bot.event
-async def on_guild_leave(guild) -> ctx:
+async def on_guild_leave(guild):
     get = bot.get_channel(513297881428525056)
-    embed=discord.Embed(title=f'{guild.name}',description='I left a server!',color=0xFF0000)
-    embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-    embed.add_field(name="Members", value=len(guild.members))
-    embed.add_field(name="Owner", value=guild.owner)
-    embed.set_thumbnail(url=guild.icon_url)
-    embed.set_footer(text=f"ID: {guild.id}")
-    await get.send(embed=embed)
+    embed2=discord.Embed(title=f'{discord.Guild.name}',description='I left a server!',color=0xFF0000)
+    embed2.set_author(name=f'{discord.Message.author.display_name}', icon_url=f'{discord.Message.author.avatar_url}')
+    embed2.add_field(name="Members", value=len(discord.Guild.members))
+    embed2.add_field(name="Owner", value=discord.Guild.owner)
+    embed2.set_thumbnail(url=discord.Guild.icon_url)
+    embed2.set_footer(text=f"ID: {discord.Guild.id}")
+    await get.send(embed=embed2)
 
 async def on_command_error(message,  error):
     if isinstance(error, commands.CommandNotFound):
@@ -300,9 +300,8 @@ async def bug(ctx, *, issue=None):
 : ##:: ## ## ##: ######::: ##:::: ##: ########:: ## ### ##:'##:::. ##:::: ##::::: ##:: ##:::: ##: ## ## ##:'##:::. ##: ##:::::::
 : ##:: ##. ####: ##...:::: ##:::: ##: ##.. ##::: ##. #: ##: #########:::: ##::::: ##:: ##:::: ##: ##. ####: #########: ##:::::::
 : ##:: ##:. ###: ##::::::: ##:::: ##: ##::. ##:: ##:.:: ##: ##.... ##:::: ##::::: ##:: ##:::: ##: ##:. ###: ##.... ##: ##:::::::
-'####: ##::. ##: ##:::::::. #######:: ##:::. ##: ##:::: ##: ##:::: ##:::: ##::::'####:. #######:: ##::. ##: ##:::: ##: ########:
+###: ##::. ##: ##:::::::. #######:: ##:::. ##: ##:::: ##: ##:::: ##:::: ##::::'####:. #######:: ##::. ##: ##:::: ##: ########:
 ....::..::::..::..:::::::::.......:::..:::::..::..:::::..::..:::::..:::::..:::::....:::.......:::..::::..::..:::::..::........::'''
-
 
 @bot.command(pass_context=True, aliases=['cc'])
 async def cryptocurrency(ctx, coin:str):
