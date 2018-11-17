@@ -259,7 +259,7 @@ async def cryptocurrency(ctx, coin:str):
         rcryptocurrency.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=rcryptocurrency)
 
-@bot.command(pass_context=True, aliases=['math','c'])
+@bot.command(pass_context=True, aliases=['math','c','calc'])
 async def calculate(ctx,*, expression):
     '''Work out expressions and equations.\n`math` `c`'''
     r = requests.get('http://api.mathjs.org/v4/?expr=' + urllib.parse.quote_plus(expression))
