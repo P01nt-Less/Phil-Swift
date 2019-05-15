@@ -3,14 +3,17 @@ from discord import ext
 from discord.ext import commands
 import asyncio
 import inspect
+import json
 import sys
 import requests
+import json
 import random
 import urllib
 from random import randint
 import os
 import yarl
 import io
+import traceback
 import datetime
 import ast
 import textwrap
@@ -18,13 +21,13 @@ import time
 import aiohttp
 from contextlib import redirect_stdout
 
-bot = commands.Bot(command_prefix='p.',case_insensitive=True,description='A discord bot.',self_bot=False,owner_id=276043503514025984)
+bot = commands.Bot(command_prefix='p!',case_insensitive=True,description='A discord bot.',self_bot=False,owner_id=276043503514025984,fetch_offline_members=True)
 bot.remove_command('help')
-
+HEADERS = {'TRN-Api-Key': '7cf12d1d-cf9a-4bef-bc7d-38f74d721e33'}
 @bot.event
 async def on_ready():
     print('Success!')
-    await bot.change_presence(activity=discord.Game(name=f'over {len(bot.guilds)} servers | p.help',type=3))
+    await bot.change_presence(activity=discord.Game(name=f'over {len(bot.guilds)} servers | p!help',type=3))
 
 @bot.event
 async def on_message(message):
@@ -36,10 +39,7 @@ async def on_message(message):
 async def on_guild_join(guild):
     get = bot.get_channel(513297881428525056)
     embed=discord.Embed(title=f'{discord.Guild.name}',description='I joined a server!',color=0x00FF00)
-    embed.add_field(name="Members", value=discord.Guild.members)
-    embed.add_field(name="Owner", value=discord.Guild.owner)
     embed.set_thumbnail(url=discord.Guild.icon_url)
-    embed.set_footer(text=f"ID: {discord.Guild.id}")
     await get.send(embed=embed)
     try:
         hi=discord.Embed(title='Hello!',description='I am Phil Swift, a bot created by a Flex Fan.\n My prefix is p.\nThe help command is p.help\nThank you for inviting me to your server!',color=0x00FF00)
@@ -51,58 +51,8 @@ async def on_guild_join(guild):
 async def on_guild_leave(guild):
     get = bot.get_channel(513297881428525056)
     embed2=discord.Embed(title=f'{discord.Guild.name}',description='I left a server!',color=0xFF0000)
-    embed2.set_author(name=f'{discord.Message.author.display_name}', icon_url=f'{discord.Message.author.avatar_url}')
-    embed2.add_field(name="Members", value=len(discord.Guild.members))
-    embed2.add_field(name="Owner", value=discord.Guild.owner)
     embed2.set_thumbnail(url=discord.Guild.icon_url)
-    embed2.set_footer(text=f"ID: {discord.Guild.id}")
     await get.send(embed=embed2)
-
-async def on_command_error(message,  error):
-    if isinstance(error, commands.CommandNotFound):
-        embed = discord.Embed(title='Error', description=f'That command doesn\'t exist!\n```' + error + '```', color=0xFF0000)
-        embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embed)
-        print(error)
-    if isinstance(error, commands.CommandOnCooldown):
-        embedd = discord.Embed(title='Error', description=f'You\'re still on cooldown.\n```' + error + '```', color=0xFF0000)
-        embedd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embedd)
-        print(error)
-    if isinstance (error, commands.MissingPermissions):
-        embeddd = discord.Embed(title='Error', description=f'You don\'t have the permissions for that.\n```' + error + '```', color=0xFF0000)
-        embeddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embeddd)
-        print(error)
-    if isinstance(error, commands.MissingRequiredArgument):
-        embedddd = discord.Embed(title='Error', description=f'You didn\'t use the command correctly. Try p.help.\n```' + error + '```', color=0xFF0000)
-        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embedddd)
-        print(error)
-    if isinstance(error, commands.NoPrivateMessage):
-        embedddd = discord.Embed(title='Error', description=f'This command cannot be executed in private messages.\n```' + error + '```', color=0xFF0000)
-        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embedddd)
-        print(error)
-    if isinstance(error, commands.TooManyArguments):
-        embedddd = discord.Embed(title='Error', description=f'You didn\'t use the command correctly. Try p.help.\n```' + error + '```', color=0xFF0000)
-        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embedddd)
-        print(error)
-    if isinstance(error, commands.NotOwner):
-        embedddd = discord.Embed(title='Error', description=f'You\'re not our lord and mighty saviour, Phil Swift.\n```' + error + '```', color=0xFF0000)
-        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embedddd)
-        print(error)
-    if isinstance(error, commands.BotMissingPermissions):
-        embedddd = discord.Embed(title='Error', description=f'I don\'t have enough permissions.\n```' + error + '```', color=0xFF0000)
-        embedddd.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        await discord.abc.Messageable.send(message.channel, embed=embedddd)
-        print(error)
-    else:
-        print(error)
-
-
 
 # Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
 class BannedMember(commands.Converter):
@@ -174,6 +124,56 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
+
+def cleanup_code(content):
+        """Automatically removes code blocks from the code."""
+        # remove ```py\n```
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
+
+        # remove `foo`
+        return content.strip('` \n')
+
+def get_syntax_error(e):
+        if e.text is None:
+            return f'```py\n{e.__class__.__name__}: {e}\n```'
+        return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
+
+@bot.command(pass_context=True, hidden=True, name='eval')
+async def _eval(ctx, *, body: str):
+        """Evaluates a code"""
+        _last_result = None
+
+        body = cleanup_code(body)
+        stdout = io.StringIO()
+
+        to_compile = f'async def func():\n{textwrap.indent(body, "  ")}'
+
+        try:
+            exec(to_compile, env)
+        except Exception as e:
+            return await ctx.send(f'```py\n{e.__class__.__name__}: {e}\n```')
+
+        func = env['func']
+        try:
+            with redirect_stdout(stdout):
+                ret = await func()
+        except Exception as e:
+            value = stdout.getvalue()
+            await ctx.send(f'```py\n{value}{traceback.format_exc()}\n```')
+        else:
+            value = stdout.getvalue()
+            try:
+                await ctx.message.add_reaction('\u2705')
+            except:
+                pass
+
+            if ret is None:
+                if value:
+                    await ctx.send(f'```py\n{value}\n```')
+            else:
+                _last_result = ret
+                await ctx.send(f'```py\n{value}{ret}\n```')
 @bot.command(pass_context=True, aliases=['commands', 'cmds','h'])
 async def help(ctx,cmd: str=None):
     '''Get a list of commands.\n`commands` `cmds` `h`'''
@@ -181,8 +181,7 @@ async def help(ctx,cmd: str=None):
         e = discord.Embed(title='Help', color=0xFFFF00)
         e.add_field(name='General', value='`help` `ping` `info` `suggest`')
         e.add_field(name='Informational', value='`cryptocurrency` `calculate`')
-        e.add_field(name='Fun', value='`coinflip` `8ball` `comic` `dog` `cat`')
-        e.add_field(name='Games', value='`minecraft` `minecraftpe` `gmod`')
+        e.add_field(name='Fun', value='`coinflip` `8ball` `comic` `dog` `cat` `catfact`')
         e.add_field(name='Utility', value='`part` `roll` `serverinfo` `userinfo`')
         e.add_field(name='Managing', value='`giverole` `takerole`')
         e.add_field(name='Moderation', value='`kick` `ban` `unban` `softban` `channelmute` `channelunmute` `warn` `purge`')
@@ -214,7 +213,7 @@ async def restart(ctx):
         embed = discord.Embed(title='Restart', description=f'Restarting...', color=0xFF0000)
         embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         await ctx.send(embed=embed)
-        return await bot.logout()
+        await bot.logout()
     else:
         embed = discord.Embed(title='Error', description=f'Our mighty lord and saviour Phil Swift is not upon us.', color=0xFF0000)
         embed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -252,6 +251,7 @@ async def info(ctx):
     sinfo.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     sinfo.add_field(name='Servers', value='{} servers.'.format(str(len(bot.guilds))))
     sinfo.add_field(name='Discord.py version', value='Version {}'.format(discord.__version__))
+    sinfo.add_field(name='Active Threads', value='Active: {}'.format(threading.active_count()))
     sinfo.add_field(name='Links', value='[Support Server](https://discord.gg/JpnSpyg \"Support Server\")\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=484052296955592704&scope=bot&permissions=8 \"Invite Link\")')
     sinfo.add_field(name='Credits', value='Rapptz - Creating Discord.py\nPointless#1278 - Creator of Phil Swift\nVilgot#7447 - Helped me out a ton')
     sinfo.set_thumbnail(url = bot.user.avatar_url)
@@ -267,7 +267,7 @@ async def suggest(ctx, *,idea=None):
     embed=discord.Embed(description=idea,color=0x00ff80, timestamp = datetime.datetime.utcnow())
     embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     embed.set_footer(text=f"{ctx.author.guild}")
-    xx = bot.get_channel(431958602148872222)
+    xx = bot.get_channel(431850567204077580)
     x = await xx.send(embed=embed)
     await x.add_reaction("✅")
     await x.add_reaction("❌")
@@ -285,7 +285,7 @@ async def bug(ctx, *, issue=None):
     embed=discord.Embed(description=issue,color=0x00ff80, timestamp = datetime.datetime.utcnow())
     embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     embed.set_footer(text=f"{ctx.author.guild}")
-    xx = bot.get_channel(431958618791739392)
+    xx = bot.get_channel(431850567204077580)
     await xx.send(embed=embed)
     success=discord.Embed(title='Bug',description='Thanks for issuing the bug!',color=0x00FF00)
     success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
@@ -365,138 +365,38 @@ async def calculate(ctx,*, expression):
 
 @bot.command(pass_context=True,aliases=['ch'])
 async def calchelp(ctx):
+    success = discord.Embed(title='Success', description='Check your DMs!', color=0xFFFF00)
     calchelp1 = discord.Embed(title='Help', description='Help command for calculate.', color=0xFFFF00)
     calchelp1.add_field(name='Operators', value='`+` Add \n `-` Subtract \n `*` Multiply \n `/` Divide \n `%` Modulo \n `^` Power \n `!` Factorial \n `and` Logical And \n `not` Logical Not \n `or` Logical Or \n `xor` Logical Exclusive Or \n `=` Assignment \n `to`,`in` Convert Units \n `==` Equal \n `!=` Unequal \n `<` Smaller Than \n `>` Larger Than \n `<=` Smaller Than or Equal To \n `=>` Larger Than or Equal To \n `:` Range')
     calchelp2 = discord.Embed(title='Arithmetic Functions', description='`simplify(expr)` Simplify an expression tree.\n`abs(x)` Calculate the absolute value of a number. \n `add(x,y)` Add two or more values, x + y. \n `cbrt(x [, allRoots])` Calculate the cubic root of a value. \n `ceil(x)` Round a value towards plus infinity If x is complex, both real and imaginary part are rounded towards plus infinity.\n`cube(x)` Calculate the cubic root of a value. \n`divide(x,y)` Divide two values, x / y.\n`exp(x)` Calculate the exponent of a value. \n `expm1` Subtract 1 from Exponent \n `fix` Round values towards zero \n `floor` Round values towards minus infinity \n `gcd` Greatest Common Divisor \n `hypot` Hypotenusa of values \n `lcm` Least Common Multiple \n `log` Logarithm of a value to a base \n `log10` Logarithm of a value \n `log1p` Logarithm of a value + 1 \n `log2` Logarithm of a value to a base of two \n `mod` Modulus \n `multiply` Multiply values \n `norm` Norm of a value to vector or matrix \n `nthRoot` nth root of a value \n `nthRoots` nth roots of a value \n `pow` Power of a value to a value \n `round` Round a value to the nearest integer \n `sqrt` Square Root \n `square` Squared \n `subtract` Subtract Values \n `xgcd` Extended Greatest Common Divisor \n `arg` Argument of a complex value \n `conj` Conjugate of a complex value \n `im` Imaginary Part of a complex value \n `re` Real Part of a complex value \n`acos` Inverse Cosine \n`acosh` Hyperbolic arccos\n`acot` Inverse Cotangent \n `acoth` Hyperbolic Arccotangent \n `acoth` Hyperbolic arccotangent \n `acsc` Inverse cosecant \n `acsch` Hyperbolic arccosecant \n `asec` Inverse secant` \n `asech` Hyperbolic arcsecant \n `asin` Inverse Sine\n`atan` Inverse tangent\n`atan2` Inverse tangent with two arguments\n`atanh` Hyperbolic arctangent\n`cos` Cosine\n`cosh` Hyperbolic cosine\n`cot` Cotangent\n`coth` Hyperbolic cotangent\n`csch` Hyperbolic cosecant\n`sec` Secant\n`sech` Hyperbolic Secant\n`sin` Sine\n`sinh` Hyperbolic Sine\n`tan` Tangent\n`tanh` Hyperbolic Tangent', color=0xFFFF00)
     calchelp3 = discord.Embed(title='Tests', description='`isInteger(x)` Test whether a value is an integer number.\n`isNaN(x)` Test whether a value is NaN (not a number).\n`isNegative(x)` Test whether a value is negative: smaller than zero\n`isNumeric(x)` Test whether a value is an numeric value.\n`isPositive(x)` Test whether a value is positive: larger than zero.\n`isPrime(x)` Test whether a value is prime: has no divisors other than itself and one.\n`isZero(x)` Test whether a value is zero.',color=0xFFFF00)
     calchelp4 = discord.Embed(title='Constants', description='`e`,`E` Euler’s number, the base of the natural logarithm. `2.718281828459045`\n`i` Imaginary unit, defined as ii=-1. A complex number is described as a + bi, where a is the real part, and b is the imaginary part. `sqrt(-1)`\n`Infinity` Infinity, a number which is larger than the maximum number that can be handled by a floating point number. `Infinity`\n `LN2` Returns the natural logarithm of 2. `0.6931471805599453`\n`LN10` Returns the natural logarithm of 10.	`2.302585092994046`\n`LOG2E` Returns the base-2 logarithm of E.	`1.4426950408889634`\n`LOG10E` Returns the base-10 logarithm of E. `0.4342944819032518`\n`NaN` Not a number. `NaN`\n`null` Value null. `null`\n`phi` Phi is the golden ratio. Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities. Phi is defined as (1 + sqrt(5)) / 2. `1.618033988749895`\n`pi`,`PI` The number pi is a mathematical constant that is the ratio of a circle\'s circumference to its diameter. `3.141592653589793`\n`SQRT1_2` Returns the square root of 1/2. `0.7071067811865476`\n`SQRT2` Returns the square root of 2. `1.4142135623730951`\n`tau` Tau is the ratio constant of a circle\'s circumference to radius, equal to 2 * pi. `6.283185307179586`\n`undefined` An undefined value. Preferably, use null to indicate undefined values. `undefined`\n `version` Returns the version number of math.js. For example `0.24.1`',color=0xFFFF00)
     user = ctx.message.author
+    calchelp1.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    calchelp2.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    calchelp3.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     calchelp4.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    success.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    await ctx.send(embed=success)
     await user.send(embed=calchelp1)
     await user.send(embed=calchelp2)
     await user.send(embed=calchelp3)
     await user.send(embed=calchelp4)
 
-'''
-Games Games Games Games Games Games Games Games
-Games Games Games Games Games Games Games Games
-Games Games Games Games Games Games Games Games
-Games Games Games Games Games Games Games Games
-Games Games Games Games Games Games Games Games
-Games Games Games Games Games Games Games Games
-'''
-
-@bot.group(aliases=['mc'])
-async def minecraft(ctx):
-    '''Minecraft'''
-    if ctx.invoked_subcommand is None:
-        mc = discord.Embed(title='Minecraft Commands', description='`server` - Find information about a Minecraft server.\n`player` - Find information about a minecraft player using UUID or username.', color=0x00FF00)
-        mc.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=mc)
+@bot.command(pass_context=True, aliases=['bbc'])
+async def news(ctx,number:int=0):
+    '''Get top headlines.'''
+    r = requests.get('https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=1707459031e54ca1b18a145e17e916b8')
+    json = r.json()
+    if json["status"] == "ok":
+        scat = discord.Embed(title='News', description=json['articles'][number+1]['title'], color=0x00FF00)
+        scat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        scat.set_footer(text='News by https://newsapi.org/')
+        return await ctx.send(embed=scat)
     else:
-        pass
-
-@minecraft.command(pass_context=True)
-async def server(ctx,ip):
-    if ctx.invoked_subcommand is None:
-        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
-        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ncalculate)
-    rs = requests.get('https://use.gameapis.net/mc/query/status/' + ip)
-    rss = rs.json()
-    rp = requests.get('https://use.gameapis.net/mc/query/players/' + ip)
-    rpp = rp.json()
-    ri = requests.get('https://use.gameapis.net/mc/query/info/' + ip)
-    rii = ri.json()
-    if ip == None:
-        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
-        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ncalculate)
-    if ip:
-        scalculate = discord.Embed(title=rss['hostname'], color=0x00FF00)
-        scalculate.set_image(url='https://use.gameapis.net/mc/query/banner/' + ip)
-        scalculate.set_thumbnail(url='https://use.gameapis.net/mc/query/icon/' + ip)
-        scalculate.add_field(name='Status', value=rss['status'])
-        scalculate.add_field(name='Protocol', value=rss['protocol'])
-        scalculate.add_field(name='Ping', value=rss['ping'])
-        scalculate.add_field(name='Players', value=str(rpp['players']['online']) + '/' + str(rpp['players']['max']))
-        scalculate.add_field(name='Version', value=rii['version'])
-        scalculate.add_field(name='MOTD', value=rii['motds']['clean'])
-        scalculate.set_footer(text='Powered by gameapis.net!')
-        scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=scalculate)
-    else:
-        icalculate = discord.Embed(title='Error', description='That is an invalid IP!', color=0xFF0000)
-        icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=icalculate)
-
-@minecraft.command(pass_context=True)
-async def player(ctx,usernameuuid):
-    rp = requests.get('https://use.gameapis.net/mc/player/profile/' + usernameuuid)
-    rpp = rp.json()
-    if usernameuuid == None:
-        ncalculate = discord.Embed(title='Error', description='Specify the Username/UUID!', color=0xFF0000)
-        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ncalculate)
-    if usernameuuid:
-        scalculate = discord.Embed(title=rpp['name'], color=0x00FF00)
-        scalculate.set_image(url='https://use.gameapis.net/mc/images/rawskin' + usernameuuid)
-        scalculate.set_thumbnail(url='https://use.gameapis.net/mc/images/skin' + usernameuuid)
-        scalculate.add_field(name='UUID', value=rpp['uuid_formatted'])
-        scalculate.set_footer(text='Powered by gameapis.net!')
-        scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=scalculate)
-    else:
-        icalculate = discord.Embed(title='Error', description='That is an invalid player!', color=0xFF0000)
-        icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=icalculate)
-
-@bot.command(pass_context=True,aliases=['mcpe'])
-async def minecraftpe(ctx,ip):
-    rp = requests.get('https://use.gameapis.net/mcpe/query/info/' + ip)
-    rpp = rp.json()
-    if ip == None:
-        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
-        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ncalculate)
-    if ip:
-        scalculate = discord.Embed(title=rpp['hostname'], color=0x00FF00)
-        scalculate.add_field(name='Version',value=rpp['version'])
-        scalculate.add_field(name='Protocol',value=rpp['protocol'])
-        scalculate.add_field(name='MOTD',value=rpp['motds']['clean'])
-        scalculate.add_field(name='Players',value=str(rpp['players']['online']) + '/' + str(rpp['players']['max']))
-        scalculate.set_footer(text='Powered by gameapis.net!')
-        scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=scalculate)
-    else:
-        icalculate = discord.Embed(title='Error', description='That is an invalid IP!', color=0xFF0000)
-        icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=icalculate)
-@bot.command(pass_context=True)
-async def gmod(ctx,ip):
-    rp = requests.get('https://use.gameapis.net/gmod/query/info/' + ip)
-    rpp = rp.json()
-    if ip == None:
-        ncalculate = discord.Embed(title='Error', description='Specify the IP!', color=0xFF0000)
-        ncalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=ncalculate)
-    if ip:
-        scalculate = discord.Embed(title=rpp['name'], color=0x00FF00)
-        scalculate.add_field(name='IP',value=rpp['hostname'])
-        scalculate.add_field(name='Map',value=rpp['map'])
-        scalculate.add_field(name='VAC Secured',value=rpp['vac_secured'])
-        scalculate.add_field(name='Password Protected',value=rpp['password_protected'])
-        scalculate.add_field(name='Players',value=str(rpp['players']['online']) + '/' + str(rpp['players']['max']))
-        scalculate.add_field(name='Version',value=rpp['version'])
-        scalculate.add_field(name='Protocol',value=rpp['protocol'])
-        scalculate.add_field(name='Join it',value=rpp['join'])
-        scalculate.set_footer(text='Powered by gameapis.net!')
-        scalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=scalculate)
-    else:
-        icalculate = discord.Embed(title='Error', description='That is an invalid IP!', color=0xFF0000)
-        icalculate.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        return await ctx.send(embed=icalculate)
+        rcat = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
+        rcat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=rcat)
 '''
 '########:'##::::'##:'##::: ##:
  ##.....:: ##:::: ##: ###:: ##:
@@ -570,18 +470,59 @@ async def dog(ctx):
 @bot.command(pass_context=True)
 async def cat(ctx):
     '''Check out a random cute or funny cat!'''
-    r = requests.get(f'https://catapi.glitch.me/random/')
+    r = requests.get(f'https://api.thecatapi.com/v1/images/search')
     json = r.json()
     if r.status_code == 200:
         scat = discord.Embed(title='Cat', description='A random cute cat!', color=0x00FF00)
         scat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
-        scat.set_image(url=json['url'])
-        scat.set_footer(text='Cats by https://catapi.glitch.me/random!')
+        scat.set_image(url=json[0]['url'])
+        scat.set_footer(text='Cats by https://thecatapi.com')
         return await ctx.send(embed=scat)
     else:
         rcat = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
         rcat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
         return await ctx.send(embed=rcat)
+
+@bot.command(pass_context=True, aliases=['cfact'])
+async def catfact(ctx):
+    '''Get a random cat fact.'''
+    r = requests.get('https://cat-fact.herokuapp.com/facts/random')
+    json = r.json()
+    if r.status_code == 200:
+        scat = discord.Embed(title='Cat Fact', description=json['text'], color=0x00FF00)
+        scat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        scat.set_footer(text='Cat Facts by https://cat-fact.herokuapp.com')
+        return await ctx.send(embed=scat)
+    else:
+        rcat = discord.Embed(title='Error', description='I could not access the API! Direct Message Pointless#1278 so this can be fixed! (You will be credited for finding it out!)', color=0xFF0000)
+        rcat.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+        return await ctx.send(embed=rcat)
+
+@bot.command(pass_context=True, aliases=['mcserv'])
+async def minecraftserver(ctx,server):
+    '''Get a random cat fact.'''
+    r = requests.get('https://api.mcsrvstat.us/2/' + server)
+    json = r.json()
+    embeed = discord.Embed(title='IP Address', description=str(json['ip']) + str(':') + str(json['port']), color=0x00FF00)
+    if json['online']=='true':
+        embeed.add_field(name='MOTD', value=json['motd']['clean'][0])
+        embeed.add_field(name='Version', value=json['version'])
+    embeed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    embeed.set_footer(text='MC Server Info by https://mcservstat.us/')
+    return await ctx.send(embed=embeed)
+
+@bot.command(pass_context=True, aliases=['mcserv'])
+async def fortnitedailyshop(ctx,server):
+    '''Get a random cat fact.'''
+    r = requests.get('https://fortnite-public-api.theapinetwork.com/prod09/store/get')
+    json = r.json()
+    embeed = discord.Embed(title='IP Address', description=str(json['ip']) + str(':') + str(json['port']), color=0x00FF00)
+    if json['online']=='true':
+        embeed.add_field(name='MOTD', value=json['motd']['clean'][0])
+        embeed.add_field(name='Version', value=json['version'])
+    embeed.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+    embeed.set_footer(text='MC Server Info by https://mcservstat.us/')
+    return await ctx.send(embed=embeed)
 
 
 '''
@@ -684,6 +625,10 @@ async def giverole(ctx, member: discord.Member, *, role: discord.Role=None):
     except Exception as e:
         if 'Privilege is too low' in str(e):
             egiverole = discord.Embed(title='Error', description='The person you are trying to give a role to has high permissions.', color=0xFF0000)
+            egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
+            return await ctx.send(embed=egiverole)
+        elif 'FORBIDDEN (status code: 403): Missing Permissions' in str(e):
+            egiverole = discord.Embed(title='Error', description='I don\'t have enough permissions! Try dragging my bot role above the role that you are using this command on. If that doesn\'t work, perhaps try giving my bot role more permissions or permissions related to that command.', color=0xFF0000)
             egiverole.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
             return await ctx.send(embed=egiverole)
         else:
@@ -830,7 +775,7 @@ async def softban(ctx, member : discord.Member=None, *,  reason : ActionReason=N
 
 @bot.command(pass_context=True, aliases=['cmute', 'channelm', 'cm'])
 @commands.has_permissions(manage_messages=True)
-async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=None):
+async def channelmute(ctx,member : discord.Member, channel, *, reason : ActionReason=None):
     '''Mute someone in a channel.\nUsage: !channelmute <member> [reason]\nAliases: !cmute, !channelm, !cm\nPermissions: Manage Messages'''
     if not member:
         mchannelmute = discord.Embed(title='Error', description='You must specify a member!', color=0xFF0000)
@@ -842,9 +787,10 @@ async def channelmute(ctx, member : discord.Member, *, reason : ActionReason=Non
         return await ctx.send(embed=rchannelmute)
     oveerwrite = discord.PermissionOverwrite()
     oveerwrite.send_messages = False
-    channeeel = ctx.message.channel
-    await channeeel.set_permissions(member, overwrite=oveerwrite)
-    schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelmuted {member.mention}\n{reason}', color=0x00FF00)
+    if channel == None:
+        channel = ctx.message.channel
+    await abc.channel.set_permissions(member, overwrite=oveerwrite)
+    schannelmute = discord.Embed(title='Channel Mute', description=f'{ctx.message.author.mention} has channelmuted {member.mention}\n{reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
     message = discord.Embed(title='Channel Mute', description=f'{ctx.message.author.mention} has channelmuted you in {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
@@ -870,7 +816,7 @@ async def channelunmute(ctx, member : discord.Member, *,  reason : ActionReason=
     schannelmute = discord.Embed(title='Channelmute', description=f'{ctx.message.author.mention} has channelunmuted {member.mention}\n{reason}', color=0x00FF00)
     schannelmute.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=schannelmute)
-    message = discord.Embed(title='Channel Mute', description=f'{ctx.message.author.mention} has channelmuted you in {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
+    message = discord.Embed(title='Channel Mute', description=f'{ctx.message.author.mention} has channelunmuted you in {ctx.guild.name}\n{reason}', color=0xFF0000,timestamp = datetime.datetime.utcnow())
     message.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     return await member.send(embed=message)
 
@@ -906,4 +852,4 @@ async def purge(ctx, amount:int=None):
     spurge.set_author(name=f'{ctx.message.author.display_name}', icon_url=f'{ctx.message.author.avatar_url}')
     await ctx.send(embed=spurge,delete_after=3.0)
 
-bot.run(os.environ.get('TOKEN'))
+bot.run('NTI0MjgxMjY5MzY2ODE2Nzg4.Dvlysw.p4hByInJnmC48LRm0-68227vbf4')
